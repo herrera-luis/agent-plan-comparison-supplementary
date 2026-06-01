@@ -1,0 +1,262 @@
+\section{OpenCode cells}\label{app:opencode-bench}
+
+\sloppy
+
+This appendix documents the six OpenCode cells in the matrix
+(one per benchmark $\times$ two models, across all three benchmarks).
+It records their motivation, the apparatus that drives them, the
+six-cell results, and the three cross-tool questions they answer.
+
+\subsection{Why a fourth tool}
+
+The threats-to-validity disclosure in
+Section~\ref{sec:threats} (\emph{``OpenSpec and Ralph were measured under
+Cline, not their canonical drivers''}) names a runtime confound: the
+\texttt{openspec} and \texttt{ralph} cells in the matrix are run
+with Cline as the agent runtime, not the canonical drivers
+(Cursor / Claude Code / OpenCode for OpenSpec; an external
+agent runtime per iteration for Ralph). The token-cost cells, the
+operator-experience scores, and the MCP-call counts therefore partly
+capture Cline's framing rather than the upstream tool's own surface.
+
+The OpenCode cells are the explicit counter-evidence. They
+use OpenCode's own native headless runtime
+(\texttt{opencode run}) with the same prompt fingerprints, the same
+MCP servers, and the same artefact schema as the rest of the study,
+so the reader can compare a canonical-pairing data point against the
+Cline-pairing data points elsewhere in the table. Concretely:
+
+\begin{itemize}
+\item OpenCode is a single binary that ships its own LLM
+  client, MCP picker, session store, and headless invocation mode
+  (invoked as \texttt{opencode run -{}-model <provider/model>
+  -{}-format json}).
+\item No IDE extension, no runtime wrapper. The agent talks directly
+  to the configured provider with the operator-supplied API key.
+\item MCP servers are wired in a per-bench \texttt{opencode.json}
+  (GitHub MCP for the single-file bench; GitHub plus Atlassian for the
+  video-support bench; GitHub MCP for the blog bench, where it
+  is also the incremental-commit channel), so the picker behaviour is
+  comparable to Cline's but the framing overhead is absent.
+\end{itemize}
+
+\subsection{Cells and apparatus}
+
+Table~\ref{tab:opencode-cells} lists the six OpenCode cells and the
+helper script that drives each.
+
+\begin{table}[h]
+\centering
+\caption{The six OpenCode cells and the helper script that drives
+each, with observed wall times.}
+\label{tab:opencode-cells}
+\footnotesize
+\begin{tabular}{@{}llllr@{}}
+\toprule
+Cell & Bench & Model & Helper script & Wall (plan + exec) \\
+\midrule
+7  & github-bootstrap       & Claude Opus 4.8   & \texttt{run\_cell7.sh opus}  & 98\,s + 235\,s = 333\,s \\
+7  & github-bootstrap       & GPT-5.5  & \texttt{run\_cell7.sh gpt}   & 119\,s + 184\,s = 303\,s \\
+8  & worker-video-feature   & Claude Opus 4.8   & \texttt{run\_cell8.sh opus}  & 293\,s + 350\,s = 643\,s \\
+8  & worker-video-feature   & GPT-5.5  & \texttt{run\_cell8.sh gpt}   & 188\,s + 253\,s = 441\,s \\
+12 & personal-blog-scaffold & Claude Opus 4.8   & \texttt{run\_cell12.sh opus} & 118\,s + 1724\,s = 1842\,s \\
+12 & personal-blog-scaffold & GPT-5.5  & \texttt{run\_cell12.sh gpt}  & 123\,s + 1245\,s = 1368\,s \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The helper scripts implement the same six-step life-cycle as
+\texttt{tools/run\_cell\{1..6\}.sh}: prep, plan-run, capture-plan,
+exec-run, capture-exec, drop. Two things differ. First, the
+\texttt{plan-run} and \texttt{exec-run} sub-commands invoke
+\texttt{opencode run} directly rather than handing off to an IDE
+extension; the operator is unattended for the full duration of each
+leg. Second, the artefact set adds two OpenCode-specific files per
+leg: \texttt{transcripts/opencode-stdout.log} (the streaming JSON
+event log from \texttt{opencode run} with the JSON format flag) and
+\texttt{transcripts/session-export.json} (the deterministic export
+fetched via \texttt{opencode export} on the captured session id).
+Token totals and per-tool-call cost figures come from
+\texttt{session-export.json} rather than from a heuristic byte-volume
+estimate, removing the Parameter~9 caveat that applies to the
+Cline-driven cells. The full operator runbook (provider auth, MCP
+auth, model-string verification, drop / redact / guard recipe) is at
+\texttt{HANDOFF-OPENCODE-RUN.md} in the study root. The MCP picker
+configurations are at \texttt{tools/opencode/opencode.simple.json}
+and \texttt{opencode.complex.json}; the headless wrapper is at
+\texttt{tools/opencode/opencode\_run.sh}.
+
+\subsection{Per-cell weighted totals and per-parameter scores}
+
+Table~\ref{tab:opencode-totals} gives the per-cell weighted totals and
+Table~\ref{tab:opencode-per-param} the full per-parameter scores for
+the six OpenCode cells.
+
+\begin{table}[h]
+\centering
+\caption{Per-cell weighted totals (max 5.0) for the six
+OpenCode cells. Across all three benchmarks OpenCode ranks third on
+the cross-model average ($3.701$, vs OpenSpec's $3.798$ and Ralph's
+$3.728$ in Table~\ref{tab:aggregate}): the blog bench has no Jira
+ticket and no rich external MCP for OpenCode to use (Param~2 and
+Param~6 sit at the no-external-source baseline), so its blog cell is
+third under both models ($3.540$ cross-model). OpenCode wins the
+video-support bench outright ($3.955$ cross-model vs Ralph's $3.855$
+and OpenSpec's $3.830$).}
+\label{tab:opencode-totals}
+\begin{tabular}{lrrr}
+\toprule
+Bench & Opus~4.8 & GPT-5.5 & Cross-model avg \\
+\midrule
+\texttt{github-repo-bootstrap}   & 3.540 & 3.675 & 3.608 \\
+\texttt{worker-video-feature}    & 3.925 & 3.985 & \textbf{3.955} \\
+\texttt{personal-blog-scaffold}  & 3.505 & 3.575 & 3.540 \\
+\midrule
+three-benchmark average          & 3.657 & 3.745 & 3.701 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[h]
+\centering
+\caption{Per-parameter scores for the six OpenCode cells
+(single-file, video-support, and blog benches under both models).
+Column abbreviations: ``s'' = single-file, ``c'' = video-support, ``b'' = blog;
+``/O'' = Opus~4.8, ``/G'' = GPT-5.5. Anchor-5 highlights:
+OpenCode anchors at $5$ on Task granularity (3) and Hand-off friction
+(10) across all three benches and both models, on Test-plan coverage
+(4) on all but the Opus blog cell, and on Code-reference accuracy (5)
+and MCP integration (6) on the video-support bench; the blog bench
+drops Param~2 (no external ticket) and Param~6 (GitHub-MCP-only) to
+the no-external-source baseline, which is why the blog columns sit
+below the video-support columns.}
+\label{tab:opencode-per-param}
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{rp{5.2cm}cccccc}
+\toprule
+\# & Parameter & s/O & s/G & c/O & c/G & b/O & b/G \\
+\midrule
+1  & Artifact completeness                    & 2 & 2 & 2 & 2 & 2 & 2 \\
+2  & Requirement traceability                 & 2 & 2 & 4 & 4 & 2 & 2 \\
+3  & Task granularity                         & 5 & 5 & 5 & 5 & 5 & 5 \\
+4  & Test-plan coverage                       & 5 & 5 & 5 & 5 & 4 & 5 \\
+5  & Code-reference accuracy                  & 4 & 5 & 5 & 5 & 5 & 4 \\
+6  & MCP / external-source integration        & 3 & 3 & 5 & 5 & 3 & 3 \\
+7  & Reproducibility (artefact persistence)   & 4 & 4 & 4 & 4 & 4 & 4 \\
+8  & Latency to ready-to-implement            & 5 & 5 & 5 & 5 & 5 & 5 \\
+9  & Token / API cost                         & 2 & 4 & 1 & 3 & 2 & 3 \\
+10 & Hand-off friction to implementation      & 5 & 5 & 5 & 5 & 5 & 5 \\
+11 & Tool licensing \& accessibility          & 5 & 5 & 5 & 5 & 5 & 5 \\
+12 & Learning curve / time-to-productivity    & 3 & 3 & 3 & 3 & 3 & 3 \\
+13 & Human-in-the-loop validation experience  & 2 & 2 & 2 & 2 & 2 & 2 \\
+14 & Autonomous capacity                      & 2 & 2 & 2 & 2 & 2 & 2 \\
+15 & Runtime integration \& ergonomics        & 3 & 3 & 3 & 3 & 3 & 3 \\
+16 & Code-review / hand-off review surface    & 4 & 4 & 4 & 4 & 4 & 4 \\
+\midrule
+   & \textbf{Weighted total}                  & \textbf{3.540} & \textbf{3.675} & \textbf{3.925} & \textbf{3.985} & \textbf{3.505} & \textbf{3.575} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Three cross-tool questions, answered}
+
+\paragraph{Q1.\ Does the Cline confound move the rubric ranking?}
+\textbf{No --- where the canonical and Cline pairings are directly
+comparable (the externally-grounded video-support bench) the native pairing
+\emph{out-scores} the Cline-driven tools; the cross-tool average
+leader changes only because of benchmark composition, not the driver.}
+Compare OpenCode's per-cell weighted total against the
+\texttt{openspec} and \texttt{ralph} totals in
+Table~\ref{tab:aggregate}: on the video-support bench OpenCode leads under
+both models (Opus~4.8 $3.925$ vs \texttt{openspec} $3.870$ vs
+\texttt{ralph} $3.895$; GPT-5.5 $3.985$ vs $3.790$ vs $3.815$). On the
+single-file bench under Opus~4.8 OpenCode ($3.540$) sits \emph{below}
+\texttt{openspec} ($3.695$); on the blog bench OpenCode is
+third under both models ($3.505$/$3.575$) because the empty repository
+strips the external grounding it depends on. The cross-model
+three-benchmark average therefore favours OpenSpec ($3.798$) over
+Ralph ($3.728$) and OpenCode ($3.701$) --- but this is a
+benchmark-composition effect: on the one bench where integration
+demand makes the canonical vs Cline pairing directly comparable,
+OpenCode's native pairing is on top, so the Cline-pairing confound is
+not \emph{inflating} OpenSpec's or Ralph's scores past OpenCode's. The
+Cline-pairing caveats (Cline's prompt-assembly overhead inflates
+Param~9 cost estimates; Cline's chat surface partly drives the OPX
+scores; Cline's MCP auto-injection partly drives the Param~6 MCP-call
+counts) remain literally true, but the cross-tool average leader is
+determined by the benchmark composition --- in particular the
+breadth-oriented blog bench --- not by the driver.
+
+\paragraph{Q2.\ Does the canonical pairing change Parameter~9 (Token
+/ API cost)?} \textbf{Yes --- and the change is consistent with the
+``rate-card overestimates real spend on heavy-cache workloads''
+hypothesis.} The OpenCode session export under Opus reports billed
+tokens deterministically, and the GPT-5.5 cells are reconstructed by
+the per-line-rate backfill in \texttt{opencode\_run.sh} so each token
+line item (input, output, cached read, cached write) is priced
+separately. OpenCode's cache-aware totals are materially
+\emph{lower} than the rate-card estimates would predict despite
+OpenCode emitting the most tokens of any tool: video-support bench Opus~4.8
+is \$22.07 cache-aware vs rate-card-equivalent \$286.94, and the
+blog bench Opus~4.8 is \$49.57 vs a rate-card-equivalent
+$\sim$\$763 (its 40.1\,M tokens at \$19/M). The delta is the framing
+overhead \emph{plus} the prompt-caching discount that the rate-card
+path does not model. A second reading specific to the Opus~4.8 column:
+although the cache-aware figures are far below rate-card, their
+\emph{absolute} level is the highest in the study --- the blog
+cell at \$49.57 (vs \$8.38 for the same cell under GPT-5.5) is the
+single most expensive cell in the corpus, because the Opus~4.8
+OpenCode greenfield run is a 40.1\,M-token deep-context session.
+OpenCode is thus the cost outlier under Opus~4.8 on every bench and
+the cheapest tool on the video-support bench under GPT-5.5 --- the cost
+ordering across tools cannot be read without specifying the model.
+
+\paragraph{Q3.\ Does OpenCode reproduce the regex-passthrough
+trap on the video-support bench?} \textbf{Only under GPT-5.5 --- under
+Opus~4.8 OpenCode \emph{avoids} it.} The trap (failure to extend
+\texttt{STANDARD\_PATH\_REGEX} from \texttt{[a-z]+} to
+\texttt{[a-z0-9]+} so that \texttt{mp4|webm|mov} would route
+correctly) is the one cell in the matrix where frontier-model
+substitution changes the outcome. Under \textbf{Opus~4.8} the
+OpenCode planning leg diagnoses the defect directly --- the plan body
+states that ``\texttt{mp4} contains a digit and fails the regex
+\ldots\ the group must become \texttt{([a-z0-9]+)}''
+(\texttt{OPENCODE\_PLAN.md}~\S 2.3) and Task~2 broadens the character
+class before any code is written, so the trap never fires. Under
+\textbf{GPT-5.5} the same tool asserts the regex was already permissive
+(plan body: \texttt{[a-z]+} ``already allows mp4/webm/mov''), falls in,
+and the execution leg recovers via a Vitest failure during apply by
+widening the character class one character. Recovery imposed no test
+regressions. The defect-convergence story in
+Section~\ref{subsec:defect-convergence} therefore reads: \emph{the
+spec format avoids the trap under both models without inspecting the
+digit (OpenSpec), while plan-content quality can avoid it only when it
+is high enough --- and is model-dependent}. OpenCode's Opus~4.8 plan
+is the single most precise code-reference diagnosis in the study and
+avoids the trap, but the same tool falls in under GPT-5.5; only the
+4-artefact spec scaffold front-loads ``parser broadening'' as a
+first-class requirement under both models.
+
+\subsection{Cross-model behavioural asymmetry on OpenCode}
+
+A cross-model behavioural difference surfaces on the single-file bench
+OpenCode cells: \emph{precondition-mismatch resolution scope}. The
+single-file bench prompt asks the planner to verify
+\texttt{terraform fmt -check -recursive} runs clean, and the target
+repo carries 13 pre-existing unformatted files unrelated to the
+requested change. OpenCode/Opus deliberately scoped its fix to the
+new file (recording the global drift as a pre-existing condition in
+\texttt{deviations.json}, exit-0 verifying only the target
+subdirectory); OpenCode/GPT-5.5 ran a repo-wide
+\texttt{terraform fmt -recursive} to clear all 13 files of drift
+before re-running the strict-clean postcondition. Both responses
+produce a green strict-clean postcondition; neither violates the
+test plan. The same scope-resolution split surfaces on the OpenSpec
+and Ralph single-file bench cells under GPT-5.5 (and on neither of
+their Opus equivalents), confirming this is a model-bound asymmetry
+that generalises across all canonical-pairing tools rather than a
+tool-specific OpenCode behaviour: GPT-5.5 pulls scope outward
+toward strict-postcondition closure, Opus pulls scope inward toward
+single-file-change minimality. Recorded in
+Appendix~\ref{app:procdev}.4 with the corresponding diff-stat
+asymmetry in Table~\ref{tab:metadata-exec}.

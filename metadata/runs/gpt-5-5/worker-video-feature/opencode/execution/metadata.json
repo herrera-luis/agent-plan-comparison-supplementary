@@ -1,0 +1,88 @@
+{
+  "tool": "opencode",
+  "tool_version": "1.14.48",
+  "model": "gpt-5-5",
+  "model_provider_string": "openai/gpt-5.5",
+  "mcp_servers": [
+    "Atlassian-MCP-Server",
+    "github"
+  ],
+  "workspace_clean": true,
+  "leg_kind": "execution",
+  "started_at": "2026-05-18T01:00:43Z",
+  "ended_at": "2026-05-18T01:04:56Z",
+  "wall_seconds": 253,
+  "token_estimate": 2193028,
+  "token_estimate_method": "opencode session export, summed across all token blocks: input + output + cache.read + cache.write",
+  "token_detail": {
+    "blocks": 40,
+    "input": 153040,
+    "output": 12468,
+    "cache_read": 2027520,
+    "cache_write": 0,
+    "total_billable": 2193028,
+    "cost_usd": 2.153,
+    "cost_source": "rate-sheet (opencode_run.sh backfill; provider did not surface USD)"
+  },
+  "cost_estimate_usd": 2.153,
+  "cost_estimate_method": "rate-sheet (opencode_run.sh backfill; provider did not surface USD)",
+  "prompt_sha256": "f2e14c5f300e4ea69c2d6137dbadd0b8dc75445f7acb5482689f855e612fe206",
+  "prompt_path": "research/agent-plan-comparison-final/prompts/worker-video-feature.md",
+  "benchmark": "worker-video-feature",
+  "exit_reason": "completed",
+  "truncated": false,
+  "operator": "dev",
+  "screenshots_present": [],
+  "session_id": "ses_1c7667f41ffeDiTZUEL4CMgy9V",
+  "baseline_sha": "30b69674f394fc7c13792ce035eb6878b75c4626",
+  "target_repo": {
+    "remote": "cognitiverun/core-services",
+    "starting_ref": "feature/bench-30b69674",
+    "execution_branch": "bench/opencode-gpt55-worker-video-feature-20260518T010037Z",
+    "ending_sha": "30b69674f394fc7c13792ce035eb6878b75c4626"
+  },
+  "mcp_calls_summary": {
+    "total": 0,
+    "by_tool": {},
+    "by_server": {},
+    "all_bench_pinned": true,
+    "bench_ref": "feature/bench-30b69674",
+    "details_path": "transcripts/session-export.json"
+  },
+  "builtin_tool_calls": {
+    "total": 26,
+    "by_tool": {
+      "read": 9,
+      "todowrite": 5,
+      "bash": 5,
+      "apply_patch": 4,
+      "glob": 2,
+      "grep": 1
+    }
+  },
+  "mcp_required_failures": [],
+  "mcp_auth_failures": [],
+  "validators": {
+    "command": "npm test (vitest)",
+    "exit_code": 0,
+    "all_green": true,
+    "result": "passed"
+  },
+  "diff_stats": {
+    "files_changed": 9,
+    "insertions": 932,
+    "deletions": 7,
+    "source_diff_path": "source-diff/core-services.patch"
+  },
+  "plan_deviations_observed": [
+    {
+      "task": "2. Update parser coverage through existing normalization",
+      "deviation_kind": "incorrect_plan_assumption",
+      "plan_claim": "Keep existing URL regexes if they already allow alphabetic extensions; they should accept mp4, webm, and mov without regex changes.",
+      "actual_finding": "The live STANDARD_PATH_REGEX extension group was [a-z]+, so standard paths ending in .mp4 did not match because mp4 contains a digit.",
+      "fix_applied": "Changed the standard path extension group to [a-z0-9]+ while preserving case-insensitive matching.",
+      "discovered_via": "Read infrastructure/worker/cdnserver/src/parser.ts and inspected STANDARD_PATH_REGEX before relying on it."
+    }
+  ],
+  "notes": "opencode execution leg under gpt-5-5 on the worker-video-feature bench. Driven by `opencode run` (native headless mode); no IDE/Cline involvement. 26 total tool calls (0 via MCP, 26 via opencode builtins)."
+}

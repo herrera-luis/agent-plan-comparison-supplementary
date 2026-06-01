@@ -1,0 +1,38 @@
+{
+  "tool": "ralph",
+  "tool_version": "ralph-loop (auto-iteration) + Cline 3.x (claude-opus-4-8 via Anthropic API)",
+  "model": "claude-opus-4-8",
+  "mcp_servers": [
+    "github"
+  ],
+  "workspace_clean": true,
+  "leg_kind": "planning",
+  "started_at": "2026-05-31T20:44:47Z",
+  "ended_at": "2026-05-31T20:53:14Z",
+  "wall_seconds": 507,
+  "wall_seconds_note": "Operator-stamped via `date -u` immediately before sending the desanitized prompt body to the Cline planning driver and immediately after it returned RALPH_TASK.md + PLAN.md. Excludes operator-side handling.",
+  "token_estimate": 53673,
+  "token_estimate_method": "Cline session token counter, transcribed from the chat footer at end of planning leg.",
+  "prompt_sha256": "b59225a1ee2d503dd0c1d08b4e669edc19196a74695008d7642206ba3763e13f",
+  "prompt_path": "research/agent-plan-comparison-final/prompts/personal-blog-scaffold.md",
+  "benchmark": "personal-blog-scaffold",
+  "operator": "dev",
+  "exit_reason": "completed",
+  "truncated": false,
+  "cost_estimate_usd": 1.0198,
+  "cost_estimate_method": "rate-sheet weighted 30/70: token_estimate × 19.0 USD/M-tokens (input/output split not exposed by Cline footer).",
+  "screenshots_present": [
+    "01-plan-footer.png",
+    "02-exec-footer.png"
+  ],
+  "artefacts_emitted": [
+    "RALPH_TASK.md",
+    "PLAN.md"
+  ],
+  "mcp_calls_summary": {
+    "captured": false,
+    "note": "MCP traffic for the Cline-driven ralph planning leg is not separately enumerated (per-call logs not exported by Cline). The planning leg produces RALPH_TASK.md + PLAN.md locally; GitHub MCP read access to the pinned greenfield repo is in scope but uncounted. n/c by convention — see HANDOFF-OPUS48-RERUN.md."
+  },
+  "validators": {},
+  "notes_pending": "Editorial cross-model narrative (RALPH_TASK.md success-criteria coverage of the i18n completeness surface and comparison vs gpt-5-5) is deferred to the scoring + paper-update chat per Part E of HANDOFF-OPUS48-RERUN.md. This metadata.json captures only the structural fields synthesised from on-disk artefacts."
+}

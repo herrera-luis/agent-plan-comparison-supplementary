@@ -1,0 +1,135 @@
+\section{Plan-defect taxonomy}
+\label{app:defect}
+
+We catalogue plan defects in three categories ordered from most to
+least diagnostic of plan quality. Counts are per
+(tool $\times$ leg $\times$ model) cell on the video-support benchmark
+unless otherwise noted.
+
+\paragraph{Category 1 --- Plan-was-wrong.}
+The plan asserts a falsifiable factual claim about the target system
+that empirically does not hold.
+
+\emph{Found in 5 of 8 (tool, model) planning legs} on the video-support
+bench (Table~\ref{tab:regex-trap-cross-model} in
+Section~\ref{subsec:defect-convergence}). The Cursor planning legs
+under both models and the Ralph planning legs under both models all
+assert that \texttt{STANDARD\_PATH\_REGEX} ``already accepts any
+\texttt{[a-z]+} extension'' (Cursor's plan~\S 2: ``No structural
+change needed: \texttt{STANDARD\_PATH\_REGEX} already captures
+\texttt{[a-z]+} extensions''; Ralph's \texttt{PLAN.md} claims the
+\texttt{\textbackslash.([a-z]+)} capture already matches
+mp4/webm/mov). The two OpenCode planning legs diverge by model: under
+\textbf{Opus~4.8} the plan body explicitly diagnoses the defect ---
+``\texttt{mp4} contains a digit and fails the regex \ldots\ the group
+must become \texttt{([a-z0-9]+)}'' (\texttt{OPENCODE\_PLAN.md}~\S 2.3),
+with Task~2 making the one-character broadening before any code is
+written --- and therefore \emph{avoids} the trap; under \textbf{GPT-5.5}
+the plan body instead claims \texttt{[a-z]+} ``already allows
+mp4/webm/mov'' and falls in. The digit \texttt{4} in \texttt{mp4}
+falls outside the character class; the regex returns \texttt{null} at
+runtime. The Cursor execution legs discover the mismatch when running
+the test suite (the parser is broadened during apply); the Ralph
+execution legs discover it via an empirical pre-implementation Node
+REPL check (Opus~4.8) or a Vitest failure (GPT); the OpenCode/GPT
+execution leg catches it via a Vitest failure and broadens the
+character class (\texttt{[a-z]+} $\to$ \texttt{[a-z0-9]+}). OpenSpec's
+\texttt{design.md}/spec avoids the assertion entirely under both
+models.
+
+\emph{Reading.} The trap lands in 5 of 8 (tool, model) video-support bench
+cells: on Cursor and Ralph under both models, never on OpenSpec, and
+on OpenCode under GPT-5.5 only. The Opus~4.8 captures expose
+\emph{two distinct avoidance mechanisms}
+(\S\ref{subsec:defect-convergence}): OpenSpec's 4-artefact spec format,
+which front-loads parser broadening as a first-class requirement and
+avoids the trap under both models without inspecting the digit; and
+OpenCode/Opus~4.8's plan precision, which diagnoses the digit directly
+and is the single most precise code-reference grounding in the study,
+but is model-dependent --- the same tool falls into the trap under
+GPT-5.5. High plan-content quality can therefore avoid the defect when
+it is high enough, but only the structural spec format avoids it under
+\emph{both} models.
+
+A distinct category-1 instance specific to the OpenCode/Opus~4.8
+video-support cell concerns runtime behaviour rather than a regex: the plan
+proposes detecting an unsatisfiable Range from \texttt{object.range}
+after \texttt{BUCKET.get(key, \{range\})}. The execution leg
+empirically probed the Miniflare/workerd R2 runtime and found that an
+out-of-bounds Range is \emph{silently clamped} (the get returns the
+full object with \texttt{range \{offset:0, length:size\}}), so the
+planned out-of-bounds check can never fire; the fix parses the client
+Range header directly against \texttt{object.size} and returns 416
+with \texttt{Content-Range: bytes */\{size\}}. The same R2-clamping
+discovery is recorded in the Ralph/Opus~4.8 video-support execution leg.
+Both are noted in the respective \texttt{deviations.json}.
+
+A \emph{lighter} category-1 instance appears on the OpenCode single-file
+bench under Opus~4.8: the planning leg's plan body claims
+\texttt{team\_access} has 47 entries where the frozen prompt body's
+inlined sibling actually has 53. The OpenCode execution leg honoured
+the verbatim-copy requirement (producing all 53 entries) and recorded
+the count error in \texttt{deviations.json}, dropping the cell's
+Param~5 Code-reference accuracy to $4$. Cursor states the correct 53
+under Opus~4.8. Neither OpenSpec nor Ralph emits a count error under
+either model; the defect is planner-local rather than benchmark-wide.
+
+\paragraph{Category 1b --- Greenfield completeness omissions.}
+The blog bench has no live code to misread, so its
+category-1-adjacent defect is \emph{omission}: a part of the bilingual
+contract the plan never specifies. The omissions cluster under GPT-5.5
+and are absent under Opus~4.8. \emph{(i) Missing \texttt{x-default}.}
+The GPT-5.5 OpenSpec spec pins only \texttt{hreflang} \texttt{en}/%
+\texttt{es} and omits the \texttt{x-default} alternate that the
+Opus~4.8 OpenSpec spec names explicitly. \emph{(ii) Missing
+article-index route.} The GPT-5.5 Cursor plan carries an ``Articles''
+nav entry but never declares the \texttt{[locale]/articles/index}
+route or a file path for the root-locale redirect, both present in the
+Opus~4.8 Cursor plan. \emph{(iii) Capability-matrix collapse.} The
+GPT-5.5 Ralph plan replaces the Opus~4.8 C1--C26 capability matrix
+(with per-task \texttt{Caps:} back-links and per-test capability
+citations) with a free-text bullet list, dropping Param~2
+(Requirement traceability) from $4$ to $2$ and Param~4 (Test-plan
+coverage) from $5$ to $4$ --- the largest single cross-model swing in
+the study ($-0.350$). \emph{Reading.} This is the mirror image of the
+regex trap: there a structural spec format is the model-robust
+avoidance mechanism, whereas here the stronger \emph{model} (Opus~4.8)
+is the robust completeness driver and even the structural format
+(GPT-5.5 OpenSpec) drops \texttt{x-default}. Both families reduce to
+whether the planner promotes an easily-forgotten sub-requirement to a
+first-class artefact.
+
+\paragraph{Category 2 --- Plan-flagged-extraction.}
+The plan pre-flags a contingency that may need to be extracted into a
+separate task; the executor confirms and extracts. The 416
+Range-Not-Satisfiable response path is the clearest example. OpenSpec
+includes the 416 path as a first-class scenario in its spec under both
+models; the OpenCode/Opus~4.8 plan proposes a dedicated
+\texttt{createVideoResponse} path for it; the Cursor video-support planning
+leg surfaces it as a discrete concern in the plan body; the Ralph plan
+does not pre-flag it and the executor fills the gap at apply time.
+
+\paragraph{Category 3 --- Plan-underspecified.}
+The plan does not specify a runtime-specific behaviour; the executor
+fills the gap during testing. \emph{Found in 2 of 6 (tool, model)
+execution legs}: the OpenSpec video-support bench execution legs under
+both Opus and GPT add strict response-header assertions
+(e.g.\ \texttt{Cache-Control}, \texttt{Vary}) that the spec did not
+pin; the test file's strict-equality assertions materialise the
+underspecified contract under both models.
+
+\paragraph{Discussion.}
+The defect distribution across the three plan shapes is informative
+and largely \emph{tool-bound}: chat-resident plans (Cursor)
+accumulate the most distinct defect classes (categories 1 and 2 plus
+the procedural deviations of Appendix~\ref{app:procdev}); the
+4-artefact spec (OpenSpec) accumulates the fewest planning-time
+defects but accumulates underspecification at execution time under
+both models; \texttt{PLAN.md}-shaped (Ralph) accumulates the same
+regex passthrough as Cursor on every video-support bench cell. The picture
+is largely robust to the model substitution: the trap-vs-avoid split
+is determined primarily by the spec format, with one model-dependent
+exception --- OpenCode, whose Opus~4.8 plan is precise enough to avoid
+the trap that the same tool falls into under GPT-5.5. Whether the
+trap-avoidance signal generalises to other code-reference shallow
+defect classes is future work (Section~\ref{sec:conclusion}).

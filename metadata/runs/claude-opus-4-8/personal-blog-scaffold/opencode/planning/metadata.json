@@ -1,0 +1,76 @@
+{
+  "tool": "opencode",
+  "tool_version": "1.15.13",
+  "model": "claude-opus-4-8",
+  "model_provider_string": "amazon-bedrock/anthropic.claude-opus-4-8",
+  "model_variant": "high",
+  "mcp_servers": [
+    "github"
+  ],
+  "workspace_clean": true,
+  "leg_kind": "planning",
+  "started_at": "2026-05-31T22:05:28Z",
+  "ended_at": "2026-05-31T22:07:26Z",
+  "wall_seconds": 118,
+  "token_estimate": 694464,
+  "token_estimate_method": "opencode session export, summed across all token blocks: input + output + cache.read + cache.write",
+  "token_detail": {
+    "blocks": 13,
+    "input": 36,
+    "output": 25371,
+    "cache_read": 319293,
+    "cache_write": 349764,
+    "total_billable": 694464,
+    "cost_usd": 2.980126
+  },
+  "cost_estimate_usd": 2.9801,
+  "cost_estimate_method": "opencode session export `cost` field (summed across token blocks by tools/opencode/opencode_run.sh)",
+  "prompt_sha256": "b59225a1ee2d503dd0c1d08b4e669edc19196a74695008d7642206ba3763e13f",
+  "prompt_path": "research/agent-plan-comparison-final/prompts/personal-blog-scaffold.md",
+  "benchmark": "personal-blog-scaffold",
+  "exit_reason": "completed",
+  "truncated": false,
+  "operator": "dev",
+  "screenshots_present": [],
+  "session_id": "ses_17fedea24ffeOWtQKiv6Zu4ket",
+  "baseline_sha": "486761c7afe573f4125bb8c28ea152954fa39753",
+  "target_repo": {
+    "remote": "cognitiverun/personal-site",
+    "starting_ref": "main",
+    "execution_branch": null,
+    "ending_sha": null
+  },
+  "mcp_calls_summary": {
+    "total": 3,
+    "by_tool": {
+      "github_get_file_contents": 3
+    },
+    "by_server": {
+      "github": 3
+    },
+    "all_bench_pinned": true,
+    "bench_ref": "main",
+    "details_path": "transcripts/session-export.json"
+  },
+  "builtin_tool_calls": {
+    "total": 2,
+    "by_tool": {
+      "bash": 1,
+      "write": 1
+    }
+  },
+  "mcp_required_failures": [],
+  "mcp_auth_failures": [
+    "Atlassian-MCP-Server"
+  ],
+  "mcp_auth_failures_note": "Benign noise from the operator's global opencode config, which also lists an Atlassian MCP; that server is not required for this greenfield bench (GitHub-only) and its auth failure had no effect on the planning leg.",
+  "validators": {
+    "command": "OPENCODE_PLAN.md present and references task keywords",
+    "exit_code": 0,
+    "all_green": true,
+    "result": "passed"
+  },
+  "diff_stats": null,
+  "plan_deviations_observed": [],
+  "notes": "opencode planning leg under claude-opus-4-8 on the personal-blog-scaffold bench. Driven by `opencode run` (native headless mode) via tools/opencode/opencode_run.sh; no IDE/Cline involvement. 5 total tool calls (3 via the GitHub MCP — all get_file_contents reads of the pinned greenfield cognitiverun/personal-site repo — and 2 via opencode builtins). Produced OPENCODE_PLAN.md only; no commits in the planning leg. token_estimate is cache-inclusive (input + output + cache.read + cache.write), consistent with the opencode convention across the study; this is NOT directly comparable to the Cursor footer's input/output-only counts."
+}

@@ -1,0 +1,210 @@
+\section{Per-leg metadata}
+\label{app:metadata}
+
+Per-leg metadata is recorded in \texttt{metadata.json} files alongside
+each canonical artefact, organised one directory per
+(model, benchmark, tool, leg) cell under \texttt{runs/}. The fields
+relevant to the rubric are summarised in
+Table~\ref{tab:metadata-plan} (planning legs) and
+Table~\ref{tab:metadata-exec} (execution legs); both tables report all
+48 (tool $\times$ benchmark $\times$ leg $\times$ model) primary
+cells under Claude Opus~4.8 and GPT-5.5.
+
+\begin{table}[h]
+\centering
+\caption{Planning-leg metadata under both primary models. Wall seconds
+and MCP-call counts come from per-leg \texttt{metadata.json}
+(\texttt{mcp\_calls\_summary}) when the driver emits a structured
+session export (the OpenCode rows under both models), and from per-call
+enumerations in \texttt{mcp-calls.md} (clean scoring view, backed by
+the operator-curated raw dump in \texttt{mcp-calls.txt}) for the
+operator-attended Cursor rows under both models. The Cursor cells
+that the operator did not attend (the single-file bench, plus all four
+execution legs) emit no MCP traffic by design and are reported ``0''.
+The OpenSpec and Ralph cells are driven through Cline-as-extension
+under \emph{both} models and emit chat transcripts but no
+machine-parseable MCP envelope, so MCP counts on those rows are
+recorded ``n/c'' (not captured) under both columns; each tool used
+the same MCP servers as the corresponding Cursor / OpenCode cell
+(Atlassian + GitHub on the worker-video-feature video-support bench,
+GitHub-only on the github-repo-bootstrap single-file bench and the
+personal-blog-scaffold blog bench).}
+\label{tab:metadata-plan}
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{ll rl rl}
+\toprule
+ & & \multicolumn{2}{c}{Opus~4.8} & \multicolumn{2}{c}{GPT-5.5} \\
+ \cmidrule(lr){3-4} \cmidrule(lr){5-6}
+\textbf{Benchmark} & \textbf{Tool} & \textbf{W (s)} & \textbf{MCP} & \textbf{W (s)} & \textbf{MCP} \\
+\midrule
+\multirow{4}{*}{\texttt{github-repo-bootstrap}}
+  & \texttt{cursor}     &   76 & 0 (sibling)        &  83 & 0 (sibling)         \\
+  & \texttt{openspec}   & 2335 & n/c                & 181 & n/c                 \\
+  & \texttt{ralph}      &  215 & n/c                & 270 & n/c                 \\
+  & \texttt{opencode} &   98 & 1 (all GH)         & 119 & 5 (all GH)          \\
+\midrule
+\multirow{4}{*}{\texttt{worker-video-feature}}
+  & \texttt{cursor}     &   119 & 12 (2 Atl + 10 GH) & 119 & 16 (2 Atl + 14 GH)  \\
+  & \texttt{openspec}   & 23663 & n/c                & 269 & n/c                 \\
+  & \texttt{ralph}      &   450 & n/c                & 176 & n/c                 \\
+  & \texttt{opencode} &   293 & 17 (2 Atl + 15 GH) & 188 & 16 (1 Atl + 15 GH)  \\
+\midrule
+\multirow{4}{*}{\texttt{personal-blog-scaffold}}
+  & \texttt{cursor}     &  181 & 4 (all GH)         &  66 & 6 (all GH)          \\
+  & \texttt{openspec}   & 1166 & n/c                & 212 & n/c                 \\
+  & \texttt{ralph}      &  507 & n/c                & 253 & n/c                 \\
+  & \texttt{opencode} &  118 & 3 (all GH)         & 123 & 3 (all GH)          \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[h]
+\centering
+\caption{Execution-leg metadata under both primary models. Source:
+per-leg \texttt{metadata.json} plus the on-disk diff-stat for each
+cell. The Cursor single-file bench leg's validator runs a per-task
+verification harness with 7 of 10 executable checks passing under both
+models; 3 skip for environment reasons (no parent Terraform root
+module, no GitHub provider, no live target repository checkout). The
+GPT-5.5 Cursor video-support bench wall time of $325$\,s and the
+Opus~4.8 wall time of $599$\,s both surface the propose/apply
+two-phase workflow in the chat trace. The
+worker-video-feature GPT-5.5 OpenCode row at 9 files /
+$+932$~/~$-7$ is dominated by the implementation diff (parser code +
+tests + spec~/~tasks.md updates); the 12 files / +418~/~$-5$ Cursor
+video-support bench Opus~4.8 row similarly includes the OpenSpec
+change-directory files plus an init-generated
+\texttt{openspec/config.yaml} materialised by the propose phase. The
+github-repo-bootstrap single-file bench rows at 15--19 files /
+$+382$--$574$~/~$-59$ on the GPT-5.5 OpenSpec / Ralph /
+OpenCode tools reflect a repo-wide \texttt{terraform fmt -recursive}
+the GPT-5.5 planner ran to clear pre-existing fmt drift in 13
+unrelated files (Appendix~\ref{app:procdev}.4); the
+corresponding Opus~4.8 rows on those tools deliberately scoped that
+fix out and are 2--7 files with no deletions. The
+\texttt{personal-blog-scaffold} rows are greenfield builds from an
+empty repository, so they are near-pure insertion (29--39 files,
+$\sim$1{,}000--1{,}700 new lines, $\leq 2$ deletions) and every leg's
+validator is \texttt{astro build}; the GPT-5.5 OpenSpec blog
+row at $+9074$ committed the generated lockfile alongside source.}
+\label{tab:metadata-exec}
+\small
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{ll rrrr rrrr l}
+\toprule
+ & & \multicolumn{4}{c}{Opus~4.8} & \multicolumn{4}{c}{GPT-5.5} & \\
+ \cmidrule(lr){3-6} \cmidrule(lr){7-10}
+\textbf{Bench} & \textbf{Tool} & \textbf{W} & \textbf{F} & \textbf{$+$} & \textbf{$-$} & \textbf{W} & \textbf{F} & \textbf{$+$} & \textbf{$-$} & \textbf{Validator} \\
+\midrule
+single-file   & \texttt{cursor}     &   76 & 1  & 254 & 0 &  210 &  1 & 254 &  0 & 7/10 PASS, 3 SKIP    \\
+single-file   & \texttt{openspec}   &  499 & 7  & 534 & 0 &  508 & 19 & 574 & 59 & openspec exit=0      \\
+single-file   & \texttt{ralph}      &  221 & 2  & 363 & 0 &  175 & 15 & 492 & 59 & TASK\_COMPLETE       \\
+single-file   & \texttt{opencode} &  235 & 2  & 434 & 0 &  184 & 15 & 382 & 59 & terraform fmt clean  \\
+\midrule
+video-support  & \texttt{cursor}     &  599 & 12 & 418 & 5 &  325 & 11 & 447 &  3 & vitest green         \\
+video-support  & \texttt{openspec}   &  439 & 19 & 1823 & 3 & 328 & 10 & 830 &  7 & vitest green         \\
+video-support  & \texttt{ralph}      &  514 &  8 & 584 & 6 &  210 &  7 & 446 &  3 & vitest green         \\
+video-support  & \texttt{opencode} &  350 &  6 & 624 & 4 &  253 &  9 & 932 &  7 & vitest green         \\
+\midrule
+blog     & \texttt{cursor}     & 1179 & 31 & 1410 & 2 &  610 & 23 & 1160 & 2 & astro build OK       \\
+blog     & \texttt{openspec}   & 1517 & 36 & 1561 & 1 &  576 & 34 & 9074 & 1 & astro build OK       \\
+blog     & \texttt{ralph}      & 1744 & 39 & 1678 & 2 & 1045 & 24 &  981 & 2 & astro build OK       \\
+blog     & \texttt{opencode} & 1724 & 29 & 1649 & 2 & 1245 & 34 & 1259 & 2 & astro build OK       \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Table~\ref{tab:walltime} is the compact planning-leg view of the same
+data referenced from the main text (\S\ref{sec:results}): wall time and
+verified live MCP-call counts per (tool, benchmark) cell under both
+models. Wall time is the \texttt{started\_at}\,$\to$\,\texttt{ended\_at}
+clock span, so for the attended cells it includes operator idle time;
+the Opus~4.8 \texttt{openspec} video-support ($23663$\,s) and
+single-file ($2335$\,s) rows are attended-idle artefacts scored at
+anchor-5 on Parameter~8 rather than penalised (see \S\ref{sec:threats}).
+
+\begin{table}[h]
+\centering
+\caption{Planning-leg wall time (s) and verified live MCP calls under
+both models. \texttt{openspec} and \texttt{ralph} run operator-attended
+via Cline-as-extension, which emits no machine-parseable MCP envelope,
+so their MCP counts are ``n/c'' (not captured). Cursor MCP rows are
+operator-curated from the chat trace (clean view
+\texttt{mcp-calls.md}, raw dump \texttt{mcp-calls.txt}); OpenCode rows
+come from its session export. ``Pinned'' marks legs whose MCP calls
+carry the pre-feature reference-state pin.}
+\label{tab:walltime}
+\begin{tabular}{ll rrr rrr}
+\toprule
+ & & \multicolumn{3}{c}{Opus~4.8} & \multicolumn{3}{c}{GPT-5.5} \\
+ \cmidrule(lr){3-5} \cmidrule(lr){6-8}
+Tool & Benchmark & Wall (s) & MCP & Pinned & Wall (s) & MCP & Pinned \\
+\midrule
+\texttt{cursor}     & single-file   &    76 & 0   & ---  &  83 & 0   & ---  \\
+\texttt{openspec}   & single-file   &  2335 & n/c & yes  & 181 & n/c & yes  \\
+\texttt{ralph}      & single-file   &   215 & n/c & yes  & 270 & n/c & yes  \\
+\texttt{opencode} & single-file   &    98 & 1   & yes  & 119 & 5   & yes  \\
+\midrule
+\texttt{cursor}     & video-support  &   119 & 12  & yes  & 119 & 16  & yes  \\
+\texttt{openspec}   & video-support  & 23663 & n/c & yes  & 269 & n/c & yes  \\
+\texttt{ralph}      & video-support  &   450 & n/c & yes  & 176 & n/c & yes  \\
+\texttt{opencode} & video-support  &   293 & 17  & yes  & 188 & 16  & yes  \\
+\midrule
+\texttt{cursor}     & blog     &   181 & 4   & yes  &  66 & 6   & yes  \\
+\texttt{openspec}   & blog     &  1166 & n/c & yes  & 212 & n/c & yes  \\
+\texttt{ralph}      & blog     &   507 & n/c & yes  & 253 & n/c & yes  \\
+\texttt{opencode} & blog     &   118 & 3   & yes  & 123 & 3   & yes  \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Table~\ref{tab:cost} gives the per-cell token and dollar breakdown
+referenced from the cost analysis in the main text
+(\S\ref{sec:results}): k-token volume and dollar cost for every (tool,
+benchmark, leg) cell under both models, with each cell tagged by
+source (\texttt{[r]} rate-card vs \texttt{[p]} provider/cache-aware).
+
+\begin{table}[h]
+\centering
+\caption{Per-cell token estimates (k-tokens) and dollar cost under
+both models. \texttt{[r]} = rate-card estimate (token volume $\times$
+weighted rate: Opus~4.8 \$19/M, GPT-5.5 \$22.5/M); \texttt{[p]} =
+provider/cache-aware (\texttt{metadata.json} \texttt{cost\_estimate\_usd}).
+Source: \texttt{tools/compute\_costs.py} and
+\texttt{tools/dump\_dual\_primary.py}.}
+\label{tab:cost}
+\scriptsize
+\setlength{\tabcolsep}{2pt}
+\begin{tabular}{ll rr rr rr rr rr rr rr rr}
+\toprule
+ & & \multicolumn{4}{c}{cursor [r]} & \multicolumn{4}{c}{openspec [r]} & \multicolumn{4}{c}{ralph [r]} & \multicolumn{4}{c}{opencode [p]} \\
+ \cmidrule(lr){3-6} \cmidrule(lr){7-10} \cmidrule(lr){11-14} \cmidrule(lr){15-18}
+ & & \multicolumn{2}{c}{Opus} & \multicolumn{2}{c}{G5.5} & \multicolumn{2}{c}{Opus} & \multicolumn{2}{c}{G5.5} & \multicolumn{2}{c}{Opus} & \multicolumn{2}{c}{G5.5} & \multicolumn{2}{c}{Opus} & \multicolumn{2}{c}{G5.5} \\
+ \cmidrule(lr){3-4} \cmidrule(lr){5-6} \cmidrule(lr){7-8} \cmidrule(lr){9-10} \cmidrule(lr){11-12} \cmidrule(lr){13-14} \cmidrule(lr){15-16} \cmidrule(lr){17-18}
+B & L & kt & \$ & kt & \$ & kt & \$ & kt & \$ & kt & \$ & kt & \$ & kt & \$ & kt & \$ \\
+\midrule
+s & p & 67.6  & 1.28  & 43.2  & 0.97 & 76.6  & 1.46 & 38.4  & 0.86 & 78.0  & 1.48 & 53.3  & 1.20 & 1199.0 & 4.59 & 784.3 & 1.00 \\
+s & e & 75.1  & 1.43  & 60.2  & 1.35 & 123.5 & 2.35 & 107.8 & 2.43 & 102.8 & 1.95 & 70.1  & 1.58 & 4598.7 & 5.13 & 1436.5 & 1.45 \\
+\addlinespace
+c & p & 105.1 & 2.00  & 74.5  & 1.68 & 92.3  & 1.75 & 70.0  & 1.57 & 94.0  & 1.79 & 55.2  & 1.24 & 6870.3 & 12.07 & 1396.8 & 1.70 \\
+c & e & 165.7 & 3.15  & 129.7 & 2.92 & 170.9 & 3.25 & 119.2 & 2.68 & 203.9 & 3.87 & 96.7  & 2.18 & 8231.9 & 10.00 & 2193.0 & 2.15 \\
+\addlinespace
+b & p &  73.2 & 1.39  &  35.5 & 0.80 &  50.3 & 0.96 &  30.0 & 0.67 &  53.7 & 1.02 &  23.1 & 0.52 &  694.5 &  2.98 &  437.9 & 1.09 \\
+b & e & 209.4 & 3.98  &  79.7 & 1.79 & 173.4 & 3.30 &  72.0 & 1.62 & 196.0 & 3.72 &  90.3 & 2.03 & 39454.5 & 46.59 & 6519.5 & 7.29 \\
+\midrule
+\multicolumn{2}{l}{s tot}    & 142.7 & 2.71  & 103.4 & 2.33 & 200.1 & 3.81 & 146.2 & 3.29 & 180.8 & 3.43 & 123.4 & 2.78 & 5797.7 & 9.72 & 2220.8 & 2.45 \\
+\multicolumn{2}{l}{c tot}    & 270.8 & 5.15  & 204.2 & 4.59 & 263.2 & 5.00 & 189.2 & 4.26 & 297.9 & 5.66 & 151.9 & 3.42 & 15102.2 & 22.07 & 3589.8 & 3.85 \\
+\multicolumn{2}{l}{b tot}    & 282.6 & 5.37  & 115.2 & 2.59 & 223.7 & 4.26 & 102.0 & 2.29 & 249.7 & 4.74 & 113.4 & 2.55 & 40149.0 & 49.57 & 6957.4 & 8.38 \\
+\multicolumn{2}{l}{3-bench}  & 696.1 & 13.23 & 422.8 & 9.51 & 687.0 & 13.05 & 437.4 & 9.84 & 728.4 & 13.84 & 388.7 & 8.75 & 61048.9 & 81.36 & 12768.0 & 14.68 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The complete \texttt{metadata.json} files (with full notes,
+token-metric caveats, MCP-call enumerations, and exit-reason
+explanations) are part of the released artefact set under
+\texttt{research/agent-plan-comparison-final/runs/}, organised as
+\texttt{runs/<model>/<benchmark>/<tool>/<leg>/metadata.json}.
+
+\FloatBarrier

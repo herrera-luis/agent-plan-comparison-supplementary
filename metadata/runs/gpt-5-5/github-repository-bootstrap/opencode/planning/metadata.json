@@ -1,0 +1,80 @@
+{
+  "tool": "opencode",
+  "tool_version": "1.14.48",
+  "model": "gpt-5-5",
+  "model_provider_string": "openai/gpt-5.5",
+  "mcp_servers": [
+    "github"
+  ],
+  "workspace_clean": true,
+  "leg_kind": "planning",
+  "started_at": "2026-05-18T00:45:15Z",
+  "ended_at": "2026-05-18T00:47:14Z",
+  "wall_seconds": 119,
+  "token_estimate": 784270,
+  "token_estimate_method": "opencode session export, summed across all token blocks: input + output + cache.read + cache.write",
+  "token_detail": {
+    "blocks": 20,
+    "input": 100010,
+    "output": 5348,
+    "cache_read": 678912,
+    "cache_write": 0,
+    "total_billable": 784270,
+    "cost_usd": 0.9999,
+    "cost_source": "rate-sheet (opencode_run.sh backfill; provider did not surface USD)"
+  },
+  "cost_estimate_usd": 0.9999,
+  "cost_estimate_method": "rate-sheet (opencode_run.sh backfill; provider did not surface USD)",
+  "prompt_sha256": "43d3ad52d61aabc217783fe6fb3374e48498138a6c708d7f3f60adf33f689dd5",
+  "prompt_path": "research/agent-plan-comparison-final/prompts/github-repository-bootstrap.md",
+  "benchmark": "github-repository-bootstrap",
+  "exit_reason": "completed",
+  "truncated": false,
+  "operator": "dev",
+  "screenshots_present": [
+    "01-plan-footer.png",
+    "02-exec-footer.png"
+  ],
+  "session_id": "ses_1c774a769ffeCJV3Ttg4SZYBZe",
+  "baseline_sha": "fbc5cbfd1372714367c45b3e33ca49b7cf32cffd",
+  "target_repo": {
+    "remote": "cognitiverun/infra-terraform",
+    "starting_ref": "fbc5cbfd1372714367c45b3e33ca49b7cf32cffd",
+    "execution_branch": null,
+    "ending_sha": null
+  },
+  "mcp_calls_summary": {
+    "total": 5,
+    "by_tool": {
+      "github_get_file_contents": 3,
+      "github_search_code": 2
+    },
+    "by_server": {
+      "github": 5
+    },
+    "all_bench_pinned": true,
+    "bench_ref": "fbc5cbfd1372714367c45b3e33ca49b7cf32cffd",
+    "details_path": "transcripts/session-export.json"
+  },
+  "builtin_tool_calls": {
+    "total": 14,
+    "by_tool": {
+      "read": 7,
+      "glob": 3,
+      "bash": 2,
+      "grep": 1,
+      "apply_patch": 1
+    }
+  },
+  "mcp_required_failures": [],
+  "mcp_auth_failures": [],
+  "validators": {
+    "command": "OPENCODE_PLAN.md present and references task keywords",
+    "exit_code": 0,
+    "all_green": true,
+    "result": "passed"
+  },
+  "diff_stats": null,
+  "plan_deviations_observed": [],
+  "notes": "opencode planning leg under gpt-5-5 on the github-repository-bootstrap bench. Driven by `opencode run` (native headless mode); no IDE/Cline involvement. 19 total tool calls (5 via MCP, 14 via opencode builtins)."
+}

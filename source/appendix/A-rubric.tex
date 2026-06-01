@@ -1,0 +1,393 @@
+\section{Full rubric with anchors}
+\label{app:rubric}
+
+This appendix reproduces the frozen sixteen-parameter rubric in full. It is
+the source-of-truth for every score in \texttt{scoring/scores.csv};
+weights sum to $100$. Parameters 1--10 are the engineering-rigor
+artefact-and-process dimensions; their relative weights are scaled so
+that the ten of them sum to 70. Parameters 11--16 are the six
+tool-surface dimensions (Section~\ref{subsec:rubric}) that prevent
+the rubric from biasing toward tools that ship persistent multi-file
+artefacts; each carries a flat weight of 5 (the six sum to 30). Each
+parameter carries five integer anchors. When a run sits between two
+anchors the scorer prefers the lower.
+
+\subsection*{1.\ Artifact completeness --- weight 7}
+Does the planner produce the \emph{shape} of artefacts a downstream
+implementer needs (proposal, design, requirements, task list), or only
+a chat blob?
+\begin{description}[leftmargin=11mm, labelindent=0mm]
+\item[1] A single chat-resident blob; no separable artefacts.
+\item[2] A single markdown document, sectioned but not split.
+\item[3] Two artefacts (e.g.\ a plan doc plus a task list) with light cross-linking.
+\item[4] Three or more artefacts but missing one of \{proposal, design, requirements, tasks\}.
+\item[5] Multi-file structured set covering proposal, design, requirements/specs, and tasks.
+\end{description}
+
+\subsection*{2.\ Requirement traceability --- weight 10.5}
+Can a future reader trace each task back to a specific requirement?
+\begin{description}[leftmargin=11mm, labelindent=0mm]
+\item[1] Tasks have no link to requirements; ``implement X'' with no reference.
+\item[2] Free-text references to requirements but no IDs.
+\item[3] Some tasks cite requirement names but not all.
+\item[4] Every task cites a requirement, but the format is inconsistent.
+\item[5] Every task carries an explicit \texttt{Covers: <REQ-ID>} (or equivalent stable ID) and the IDs resolve to scenarios in the spec.
+\end{description}
+
+\subsection*{3.\ Task granularity --- weight 7}
+Are tasks sized for individual review and check-off?
+\begin{description}[leftmargin=11mm, labelindent=0mm]
+\item[1] One mega-task (``implement the feature'') or no task list.
+\item[2] A handful of multi-day chunks; not individually reviewable.
+\item[3] $\sim 10$ medium tasks; some are still vague.
+\item[4] $\sim 20$ tasks; most are concrete but a few are still mega-tasks.
+\item[5] Tasks scoped to $\le 30$ minutes of work each; every task is a single PR-sized unit.
+\end{description}
+
+\subsection*{4.\ Test-plan coverage --- weight 10.5}
+Does each task carry a test plan a reviewer can execute?
+\begin{description}[leftmargin=11mm, labelindent=0mm]
+\item[1] ``Add tests'' appears once globally with no specifics.
+\item[2] A separate ``tests'' task at the end with no per-task linkage.
+\item[3] Some tasks include a sentence-level test note.
+\item[4] Most tasks include a concrete test plan, but coverage gaps remain.
+\item[5] Every task ships with a per-task test plan (commands or scenario refs); test plans cite real fixtures or scenarios.
+\end{description}
+
+\subsection*{5.\ Code-reference accuracy --- weight 7}
+Are file paths, function names, and APIs cited in the plan real, or hallucinated?
+\begin{description}[leftmargin=11mm, labelindent=0mm]
+\item[1] Referenced paths or APIs do not exist in the live repo.
+\item[2] Some references are real, but at least one is hallucinated.
+\item[3] All references are plausible; spot-check finds them mostly correct but with stale signatures.
+\item[4] All file paths verified; minor naming drift in one or two function references.
+\item[5] Every cited file/function/API is verifiable in the live repo at the planner's stated path.
+\end{description}
+
+\subsection*{6.\ MCP / external-source integration --- weight 7}
+When the prompt references external systems (Jira ticket, GitHub PR), does the
+planner actually read them?
+\begin{description}[leftmargin=11mm, labelindent=0mm]
+\item[1] Planner ignores the external link entirely.
+\item[2] Planner names the external system but quotes nothing from it.
+\item[3] Planner summarises the external source but with at least one factual error.
+\item[4] Planner integrates the external source faithfully; minor omission.
+\item[5] Planner reads, summarises, and cites the external system correctly; integrates ticket comments and linked code into the plan.
+\end{description}
+
+\subsection*{7.\ Reproducibility (artefact persistence) --- weight 7}
+If the user closes the chat, can the plan be re-opened verbatim?
+\begin{description}[leftmargin=11mm, labelindent=0mm]
+\item[1] Plan lives only in volatile chat history; no on-disk artefact.
+\item[2] User can manually copy the plan out, but no native export.
+\item[3] Plan has a native on-disk surface, but no version-control integration.
+\item[4] Plan is on disk and gits cleanly, but lacks a validation/lint step.
+\item[5] Plan is a versioned directory in git with a CLI-driven validator (\texttt{openspec validate --strict} or equivalent).
+\end{description}
+
+\subsection*{8.\ Latency to ``ready to implement'' --- weight 3.5}
+Wall-clock time from prompt-submitted to a complete plan being ready.
+\begin{description}[leftmargin=11mm, labelindent=0mm]
+\item[1] $> 60$ minutes.\quad
+\item[2] $30$--$60$ minutes.\quad
+\item[3] $15$--$30$ minutes.\quad
+\item[4] $10$--$15$ minutes.\quad
+\item[5] $< 10$ minutes.
+\end{description}
+
+\subsection*{9.\ Token / API cost --- weight 3.5}
+Approximate API spend taken from \texttt{metadata.json.token\_estimate}.
+\begin{description}[leftmargin=11mm, labelindent=0mm]
+\item[1] $> \$5.00$.\quad
+\item[2] $\$2.00$--$\$5.00$.\quad
+\item[3] $\$1.00$--$\$2.00$.\quad
+\item[4] $\$0.50$--$\$1.00$.\quad
+\item[5] $< \$0.50$.
+\end{description}
+
+\subsection*{10.\ Hand-off friction to implementation --- weight 7}
+Once the plan exists, how much friction is there to start coding from it?
+\begin{description}[leftmargin=11mm, labelindent=0mm]
+\item[1] Manual re-typing required; no path to feed the plan back to a coding agent.
+\item[2] Plan can be copy-pasted into a fresh agent prompt, but no first-class hand-off tool.
+\item[3] One-step manual hand-off (copy to file, point an agent at it).
+\item[4] Native hand-off via a documented command, requiring one explicit user action.
+\item[5] Single-command hand-off (\texttt{/opsx-apply}, Cursor $\to$ Agent Mode, Ralph loop) with no manual re-typing.
+\end{description}
+
+\subsection*{11.\ Tool licensing \& accessibility --- weight 5}
+Is the tool itself open-source, and are the features that this study
+exercises (MCP transports, agent mode, plan-card hand-off) reachable on
+a free tier or behind a paid plan? Anchor evidence is drawn from the
+public pricing pages~\citep{cline2026pricing,cursor2026pricing}.
+\begin{description}[leftmargin=11mm, labelindent=0mm]
+\item[1] Closed-source \emph{and} the primary feature exercised by the
+study (chat MCP, agent mode) is gated behind a paid plan with no free
+fallback.
+\item[2] Closed-source freemium; the study's primary feature is gated
+behind a paid plan (e.g.\ Cursor's MCP picker requires Pro at \$20/mo).
+\item[3] Closed-source freemium where most features are reachable on
+the free tier and only premium model rates require paid plans.
+\item[4] Open-source frontend; some advanced features only available in
+a paid hosted offering or with subscription credits.
+\item[5] Fully open-source; all features used by this study reachable
+on the free tier; BYOK supported (Cline; OpenSpec and Ralph as
+free CLIs / loops with no licensing layer).
+\end{description}
+
+\subsection*{12.\ Learning curve / time-to-productivity --- weight 5}
+How much friction does the operator face between ``never used the
+tool'' and ``producing a usable plan''? This dimension is distinct
+from O1 (setup friction) because it scores the cognitive cost of the
+\emph{plan format and conventions} the operator must learn, not just
+the install pipeline.
+\begin{description}[leftmargin=11mm, labelindent=0mm]
+\item[1] Multi-step CLI install plus multiple file conventions plus a
+non-trivial mental model the operator must internalise (sprint
+budgets, validators, lifecycle states) before the first plan.
+\item[2] CLI install plus two coupled conventions to learn before any
+plan content (OpenSpec: install + \texttt{openspec init} +
+4-artefact mental model + \texttt{validate --strict} semantics).
+\item[3] Single setup step plus one small mental model (Ralph:
+\texttt{RALPH\_TASK.md} + loop iteration semantics).
+\item[4] Already-in-IDE chat surface plus one micro-convention to
+learn (e.g.\ a slash command or mode switch).
+\item[5] Zero install, zero conventions; chat is the primary surface
+and the tool drives the format end-to-end (Cursor in Plan Mode).
+\end{description}
+
+\subsection*{13.\ Human-in-the-loop validation experience --- weight 5}
+How easily can the operator inspect, refine, and correct the plan
+before it is handed to execution, without restarting the workflow?
+This parameter is \emph{model-sensitive}: the underlying tool surface
+sets the ceiling, but the model's habit of surfacing clarifying
+questions versus committing to a single best guess shifts the score
+within that ceiling.
+\begin{description}[leftmargin=11mm, labelindent=0mm]
+\item[1] No mid-flight refinement; any plan change requires restarting
+the workflow from scratch with a new prompt.
+\item[2] Plan can be edited but the tool must be re-invoked over the
+edited file (a headless CLI re-run over an edited plan file:
+edit-then-replay).
+\item[3] Plan can be edited in place; the tool re-reads on next
+invocation but offers no clarification affordance.
+\item[4] Plan-card hand-off plus in-thread refinement; the tool
+absorbs follow-up turns, but does not surface clarifying questions
+to the operator (Cursor's chat surface; OpenSpec/Ralph under
+Cline-as-extension --- both under either model).
+\item[5] Plan-card hand-off plus in-thread refinement \emph{and} the
+tool actively surfaces clarifying questions when the prompt is
+ambiguous, raising the operator's awareness of the choices being
+made (no cell in this study reaches anchor-5 on Param~13).
+\end{description}
+
+\subsection*{14.\ Autonomous capacity --- weight 5}
+Once the plan exists, how much wall-clock work can the tool do without
+the operator present, and how gracefully does it handle running out of
+budget or hitting an unrecoverable failure?
+\begin{description}[leftmargin=11mm, labelindent=0mm]
+\item[1] No headless mode; an operator must be present to advance
+every action and to dispatch every tool call (Cursor: even
+``Agent Mode'' execution requires an attended chat panel).
+\item[2] Headless mode exists, but with no budget intelligence and no
+per-iteration commit (OpenSpec: end-to-end run drives the validator
+to convergence but does not chunk progress to git).
+\item[3] Headless mode plus per-iteration commit (each loop iteration
+lands as a commit), but with no budget intelligence.
+\item[4] Headless mode plus per-iter commit plus soft budget warnings
+when wall-clock or token spend approaches a configured ceiling.
+\item[5] Headless mode plus budget intelligence (cost ceilings,
+sprint-style budgets), per-iter commit, and an explicit
+\texttt{TASK\_GUTTER} fallback when the loop cannot make further
+progress (Ralph: budgets, per-iter commit, and gutter fallback are
+all built in).
+\end{description}
+
+\subsection*{15.\ Runtime integration \& ergonomics --- weight 5}
+How well does the tool fit into the operator's existing IDE / shell
+runtime, and how cleanly does it surface MCP transports and model
+selection without requiring a separate process?
+\begin{description}[leftmargin=11mm, labelindent=0mm]
+\item[1] CLI scaffold install plus file-only conventions; no chat
+surface and no integrated MCP runtime.
+\item[2] CLI install with a separate runtime; chat surface available
+only when paired with another tool (OpenSpec: paired with
+Cline-as-extension or with \texttt{cursor-agent} for execution).
+\item[3] Loop harness with optional in-IDE driver (Ralph: loop runs
+on its own; Cline-as-extension and \texttt{cursor-agent} both
+work as drivers).
+\item[4] In-IDE chat panel with integrated MCP transports; runs
+alongside the editor as a first-class extension.
+\item[5] Native to the IDE the operator already uses; integrated MCP
+picker; chat is the primary surface; model picker is one click;
+slash-commands are first-class (Cursor).
+\end{description}
+
+\subsection*{16.\ Code-review / hand-off review surface --- weight 5}
+Once a plan exists, how well can a non-author teammate (or a future
+operator) review it asynchronously?
+\begin{description}[leftmargin=11mm, labelindent=0mm]
+\item[1] Chat thread only; no on-disk artefact a non-author can fetch
+without operator help.
+\item[2] Chat thread plus a non-deterministic local save location
+(Cursor: \texttt{\textasciitilde{}/.cursor/plans/<hash>.plan.md}
+exists locally but the path is operator-specific).
+\item[3] Single file committed to git with no validator and no
+required structure.
+\item[4] Single file committed to git plus a non-strict structural
+convention reviewers can read mechanically (Ralph:
+\texttt{PLAN.md} sections + \texttt{TASK\_COMPLETE} sentinel).
+\item[5] Multiple structured files committed to git plus a strict CLI
+validator (\texttt{openspec validate --strict}) so reviewers can
+audit completeness mechanically as well as visually.
+\end{description}
+
+\textbf{Frozen-as-of.} The rubric is frozen at the commit that
+introduces \texttt{rubric.md}. Parameters 11--16 were added in the
+revision that broadened the rubric to score tool-surface dimensions
+(licensing, learning curve, human-in-the-loop validation, autonomous
+capacity, runtime integration, and code-review surface). At
+introduction, every prior row was re-scored under the new weights to
+preserve the frozen-as-of contract: any change to parameters, weights,
+or anchors after a single row has been written to \texttt{scores.csv}
+requires re-scoring all prior rows.
+
+\section{Operator-experience companion rubric}\label{app:opx-rubric}
+
+The primary rubric in Appendix~\ref{app:rubric} is intentionally
+weighted toward dimensions that matter for sustained, hand-off-ready
+engineering work --- artefact persistence, requirement traceability,
+and a strict validator. Lightweight surfaces such as a chat-resident
+plan look bad on those dimensions even when they shine on the
+operator's lived experience: setup time, cognitive load,
+time-to-first-result, and how easy it is to course-correct without
+restarting. To prevent the headline ranking from being read as a
+property of the rubric instead of a property of the tools, this
+appendix introduces a four-parameter \emph{operator-experience}
+companion rubric with equal weights (25\,\% each, sum 100\,\%).
+
+The companion rubric is scored \emph{per tool}, not per (tool $\times$
+benchmark): O1--O4 are properties of the tool surface, not of the
+task. Each parameter is scored on the same 1--5 anchor scale and
+defended in \texttt{scoring/grill-me-log.md}.
+
+\subsection*{O1.\ Setup friction --- weight 25}
+How much work does the operator do before any plan content can
+appear?
+\begin{description}[leftmargin=11mm, labelindent=0mm]
+\item[1] Multi-step CLI install plus scaffold conventions and file
+layout the operator must learn before producing a usable plan.
+\item[2] CLI install plus a small number of one-time configuration
+files; conventions documented but still must be learned.
+\item[3] CLI install only; conventions are minimal or self-documenting.
+\item[4] No install; one configuration file (e.g.\ \texttt{.mcp.json})
+is the entire setup.
+\item[5] Zero install --- already in the IDE / shell the operator
+uses for other work.
+\end{description}
+
+\subsection*{O2.\ Operator cognitive load --- weight 25}
+How many sub-formats and conventions must the operator hold in head
+to author and review a plan?
+\begin{description}[leftmargin=11mm, labelindent=0mm]
+\item[1] Multiple coupled sub-formats (proposal vs design vs spec
+deltas vs tasks vs validator output); operator must remember which
+content belongs in which file.
+\item[2] Two-to-three coupled sub-formats with documented but
+non-trivial separation.
+\item[3] Single primary file plus one auxiliary surface (e.g.\
+\texttt{PLAN.md} plus a task-completion signal).
+\item[4] Single primary surface; auxiliaries are lightweight and
+optional.
+\item[5] Single chat surface; the tool drives the format and the
+operator never has to recall a layout.
+\end{description}
+
+\subsection*{O3.\ Time-to-first-viable-plan --- weight 25}
+Wall-clock time from prompt-submitted to the first piece of usable
+plan content appearing on the operator's screen (not full plan
+completion --- \emph{first} content).
+\begin{description}[leftmargin=11mm, labelindent=0mm]
+\item[1] Several minutes of scaffolding (file creation, validator
+boot, MCP handshake) before any plan prose appears.
+\item[2] Roughly a minute of scaffolding before plan prose starts
+streaming.
+\item[3] Some scaffolding overhead but the operator can see the plan
+forming inside the first 30 seconds.
+\item[4] Plan content streams within seconds; minimal scaffolding.
+\item[5] Plan content streams immediately; the operator sees the
+model thinking on screen.
+\end{description}
+
+\subsection*{O4.\ In-flight iterability --- weight 25}
+How easy is it to refine the plan once it exists, without restarting
+the workflow?
+\begin{description}[leftmargin=11mm, labelindent=0mm]
+\item[1] Plan revisions require restarting the workflow from scratch.
+\item[2] Plan revisions require editing files by hand and re-running
+the validator/loop.
+\item[3] Plan revisions are supported via re-invocation against the
+same files.
+\item[4] Plan revisions are supported in-thread but require an
+explicit ``revise'' command.
+\item[5] Operator can refine the plan in the same chat without
+restarting; the tool absorbs follow-up turns.
+\end{description}
+
+\subsection*{Per-tool scores}
+
+The companion rubric is scored per tool (the four dimensions are
+properties of the tool surface, not of the task). Anchors are written
+defenses in \texttt{scoring/grill-me-log.md} (operator-experience
+section). Table~\ref{tab:opx-scores} reports the per-parameter scores
+and the equal-weighted per-tool totals.
+
+\begin{table}[h]
+\centering
+\caption{Operator-experience scores (1--5 per parameter; weighted
+total at equal 25\,\% weights, max 5.0). Column abbreviations: O1
+setup friction, O2 cognitive load, O3 time-to-first-viable-plan, O4
+in-flight iterability. OpenSpec and Ralph are scored under
+Cline-as-extension, the driver used under \emph{both} models, so these
+scores are model-stable. The OpenCode row is an anchor sketch
+pending a formal grill-me rescoring pass; its native headless
+operating mode constrains O4 to anchor-2 (revising a
+plan requires re-invocation and overwriting the session), which caps
+its OPX total well below Cursor's despite OpenCode leading the
+engineering-rigor rubric.}
+\label{tab:opx-scores}
+\begin{tabular}{lcccccr}
+\toprule
+Tool & O1 & O2 & O3 & O4 & Total \\
+\midrule
+\texttt{cursor}     & 5 & 4 & 5 & 5 & \textbf{4.75} \\
+\texttt{opencode} & 3 & 3 & 4 & 2 & \textbf{3.00} \\
+\texttt{openspec}   & 2 & 2 & 3 & 3 & \textbf{2.50} \\
+\texttt{ralph}      & 2 & 2 & 3 & 2 & \textbf{2.25} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The ranking inverts the engineering-rigor headline: Cursor wins
+the operator-experience rubric on the strength of zero-install setup
+(O1: 5), single chat surface (O2: 4), immediate plan streaming (O3:
+5), and in-thread revision (O4: 5). OpenCode places second: a
+single-binary install plus a per-bench \texttt{opencode.json} is a
+light ramp (O1: 3), \texttt{opencode run} streams content immediately
+(O3: 4), and the operator holds only one plan file plus the
+\texttt{session-export.json} schema in mind (O2: 3); its only real
+weakness is that the headless-only operating mode admits revision only
+by re-invocation and session overwrite (O4: 2). OpenSpec places third:
+its 4-artefact scaffold imposes the highest file-format setup and
+cognitive-load costs (O1: 2, O2: 2), though driven via
+Cline-as-extension the agent thinking streams live in the chat panel
+(O3: 3) and revisions are supported by re-invoking against the same
+files (O4: 3). Ralph lands last on operator experience despite its
+lightweight single \texttt{PLAN.md}: operating it requires authoring
+\texttt{RALPH\_TASK.md} (success criteria plus a verification command)
+and internalising the loop, budget, and
+\texttt{GUTTER}/\texttt{COMPLETE} semantics --- the largest conceptual
+ramp of the four (O1: 2, O2: 2) --- the loop boots before the first
+plan prose appears (O3: 3), and refining the plan means editing the
+task file and re-running the loop rather than taking a follow-up turn
+in chat (O4: 2).

@@ -1,0 +1,40 @@
+{
+  "tool": "cursor",
+  "tool_version": "Cursor (Agent Mode, gpt-5-5)",
+  "model": "gpt-5-5",
+  "mcp_servers": [
+    "github",
+    "Atlassian-MCP-Server"
+  ],
+  "workspace_clean": true,
+  "leg_kind": "planning",
+  "started_at": "2026-05-18T01:21:59Z",
+  "ended_at": "2026-05-18T01:23:22Z",
+  "wall_seconds": 83,
+  "wall_seconds_note": "Operator-stamped via `date -u` immediately before sending the desanitized prompt body to the driver and immediately after the driver reported the planning leg complete (Cursor plan card rendered for tool=cursor; Cline /opsx-propose returned for tool=openspec; Cline planning prompt returned RALPH_TASK.md + PLAN.md for tool=ralph). Excludes operator-side handling.",
+  "token_estimate": 43200,
+  "token_estimate_method": "Cursor chat-footer cumulative-token counter, transcribed by operator at capture-plan time.",
+  "prompt_sha256": "80f14e082aee3b51d2088235ca2d999358faa8d53367782efd1e87fa74e743b3",
+  "prompt_path": "research/agent-plan-comparison-final/prompts/github-repository-bootstrap.md",
+  "benchmark": "github-repository-bootstrap",
+  "operator": "dev",
+  "exit_reason": "completed",
+  "truncated": false,
+  "cost_estimate_usd": 0.972,
+  "cost_estimate_method": "rate-sheet weighted 30/70: token_estimate × 22.5 USD/M-tokens (input/output split not exposed by Cline/Cursor footer).",
+  "screenshots_present": [
+    "01-plan-footer.png",
+    "02-exec-footer.png"
+  ],
+  "plan_artefact": "plan.md",
+  "mcp_calls_summary": {
+    "total": 0,
+    "by_tool": {},
+    "by_server": {},
+    "all_bench_pinned": null,
+    "bench_ref": null,
+    "details_path": "mcp-calls.txt",
+    "details_path_note": "Planner did not invoke any MCP tool. The simple-bench prompt asks the planner to produce a Terraform module declaration in a sibling repo by mirroring an existing example; no GitHub or Atlassian round-trip was needed (the example file lives in the same workspace tree). mcp-calls.txt records this leg as `none`."
+  },
+  "notes_pending": "Editorial cross-model narrative (driver substitution, MCP-call breakdown, planning-leg defect surface, comparison vs rev-3 / v1 Opus) is deferred to the scoring + paper-update chat per Part E of HANDOFF-GPT55-RERUN.md. This metadata.json captures only the structural fields that can be synthesised from on-disk artefacts."
+}

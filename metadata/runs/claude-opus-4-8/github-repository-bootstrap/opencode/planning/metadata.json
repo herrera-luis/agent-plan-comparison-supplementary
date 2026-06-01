@@ -1,0 +1,73 @@
+{
+  "tool": "opencode",
+  "tool_version": "1.15.13",
+  "model": "claude-opus-4-8",
+  "model_provider_string": "amazon-bedrock/anthropic.claude-opus-4-8",
+  "mcp_servers": [
+    "github"
+  ],
+  "workspace_clean": true,
+  "leg_kind": "planning",
+  "started_at": "2026-05-31T03:48:25Z",
+  "ended_at": "2026-05-31T03:50:03Z",
+  "wall_seconds": 98,
+  "token_estimate": 1199028,
+  "token_estimate_method": "opencode session export, summed across all token blocks: input + output + cache.read + cache.write",
+  "token_detail": {
+    "blocks": 13,
+    "input": 36,
+    "output": 18885,
+    "cache_read": 567390,
+    "cache_write": 612717,
+    "total_billable": 1199028,
+    "cost_usd": 4.585481
+  },
+  "cost_estimate_usd": 4.5855,
+  "cost_estimate_method": "opencode session export `cost` field",
+  "prompt_sha256": "43d3ad52d61aabc217783fe6fb3374e48498138a6c708d7f3f60adf33f689dd5",
+  "prompt_path": "research/agent-plan-comparison-final/prompts/github-repository-bootstrap.md",
+  "benchmark": "github-repository-bootstrap",
+  "exit_reason": "completed",
+  "truncated": false,
+  "operator": "dev",
+  "screenshots_present": [],
+  "session_id": "ses_183da4858ffe3h7DV3drkSLkkb",
+  "baseline_sha": "fbc5cbfd1372714367c45b3e33ca49b7cf32cffd",
+  "target_repo": {
+    "remote": "cognitiverun/infra-terraform",
+    "starting_ref": "fbc5cbfd1372714367c45b3e33ca49b7cf32cffd",
+    "execution_branch": null,
+    "ending_sha": null
+  },
+  "mcp_calls_summary": {
+    "total": 1,
+    "by_tool": {
+      "github_get_file_contents": 1
+    },
+    "by_server": {
+      "github": 1
+    },
+    "all_bench_pinned": true,
+    "bench_ref": "fbc5cbfd1372714367c45b3e33ca49b7cf32cffd",
+    "details_path": "transcripts/session-export.json"
+  },
+  "builtin_tool_calls": {
+    "total": 4,
+    "by_tool": {
+      "read": 2,
+      "glob": 1,
+      "write": 1
+    }
+  },
+  "mcp_required_failures": [],
+  "mcp_auth_failures": [],
+  "validators": {
+    "command": "OPENCODE_PLAN.md present and references task keywords",
+    "exit_code": 0,
+    "all_green": true,
+    "result": "passed"
+  },
+  "diff_stats": null,
+  "plan_deviations_observed": [],
+  "notes": "opencode planning leg under claude-opus-4-8 on the github-repository-bootstrap bench. Driven by `opencode run` (native headless mode); no IDE/Cline involvement. 5 total tool calls (1 via MCP, 4 via opencode builtins)."
+}

@@ -1,0 +1,77 @@
+{
+  "tool": "opencode",
+  "tool_version": "1.15.13",
+  "model": "gpt-5-5",
+  "model_provider_string": "openai/gpt-5.5",
+  "mcp_servers": [
+    "github"
+  ],
+  "workspace_clean": true,
+  "leg_kind": "planning",
+  "started_at": "2026-06-01T02:39:44Z",
+  "ended_at": "2026-06-01T02:41:47Z",
+  "wall_seconds": 123,
+  "token_estimate": 437901,
+  "token_estimate_method": "opencode session export, summed across all token blocks: input + output + cache.read + cache.write",
+  "token_detail": {
+    "blocks": 13,
+    "input": 94095,
+    "output": 15102,
+    "cache_read": 328704,
+    "cache_write": 0,
+    "total_billable": 437901,
+    "cost_usd": 1.0879,
+    "cost_source": "rate-sheet (opencode_run.sh backfill; provider did not surface USD)"
+  },
+  "cost_estimate_usd": 1.0879,
+  "cost_estimate_method": "rate-sheet (opencode_run.sh backfill; provider did not surface USD): input×5.0 + output×30.0 + cache_read×0.5 per million tokens",
+  "prompt_sha256": "b59225a1ee2d503dd0c1d08b4e669edc19196a74695008d7642206ba3763e13f",
+  "prompt_path": "research/agent-plan-comparison-final/prompts/personal-blog-scaffold.md",
+  "benchmark": "personal-blog-scaffold",
+  "exit_reason": "completed",
+  "truncated": false,
+  "operator": "dev",
+  "screenshots_present": [],
+  "session_id": "ses_17ef2cf8affesUh51B1S9dxm38",
+  "baseline_sha": "486761c7afe573f4125bb8c28ea152954fa39753",
+  "target_repo": {
+    "remote": "cognitiverun/personal-site",
+    "starting_ref": "main",
+    "execution_branch": null,
+    "ending_sha": null
+  },
+  "mcp_calls_summary": {
+    "total": 3,
+    "by_tool": {
+      "github_get_file_contents": 3
+    },
+    "by_server": {
+      "github": 3
+    },
+    "all_bench_pinned": true,
+    "bench_ref": "main",
+    "details_path": "transcripts/session-export.json"
+  },
+  "builtin_tool_calls": {
+    "total": 4,
+    "by_tool": {
+      "read": 2,
+      "glob": 1,
+      "apply_patch": 1
+    }
+  },
+  "mcp_required_failures": [],
+  "mcp_auth_failures": [
+    "Atlassian-MCP-Server"
+  ],
+  "mcp_auth_failures_note": "Benign noise from the operator's global opencode config, which also lists an Atlassian MCP; that server is not required for this greenfield bench (GitHub-only) and its auth failure had no effect on the planning leg.",
+  "validators": {
+    "command": "OPENCODE_PLAN.md present and references task keywords",
+    "exit_code": 0,
+    "all_green": true,
+    "result": "passed"
+  },
+  "diff_stats": null,
+  "plan_deviations_observed": [],
+  "notes": "opencode planning leg under gpt-5-5 on the personal-blog-scaffold bench. Driven by `opencode run` (native headless mode) via tools/opencode/opencode_run.sh; no IDE/Cline involvement. 7 total tool calls (3 via the GitHub MCP — all get_file_contents reads of the pinned greenfield cognitiverun/personal-site repo — and 4 via opencode builtins). Produced OPENCODE_PLAN.md only; no commits in the planning leg. token_estimate is cache-inclusive (input + output + cache.read + cache.write) per the opencode convention across the study; for gpt-5-5 the provider did not surface USD, so cost is rate-sheet backfilled (input 5.0 / output 30.0 / cache_read 0.5 USD per M). This is NOT directly comparable to the Cursor footer's input/output-only counts."
+}

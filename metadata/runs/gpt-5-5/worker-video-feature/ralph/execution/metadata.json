@@ -1,0 +1,66 @@
+{
+  "tool": "ralph",
+  "tool_version": "ralph-loop (auto-iteration) + Cline 3.x (gpt-5-5 via OpenAI API)",
+  "model": "gpt-5-5",
+  "mcp_servers": [],
+  "mcp_servers_note": "Execution legs run with MCP disabled by design (the prompt + plan carry all the information the agent needs; we want diffs to reflect agent reasoning, not MCP fetches).",
+  "workspace_clean": false,
+  "leg_kind": "execution",
+  "started_at": "2026-05-17T20:52:46Z",
+  "ended_at": "2026-05-17T20:56:16Z",
+  "wall_seconds": 210,
+  "wall_seconds_note": "Operator-stamped via `date -u` immediately before kicking off the execution leg and immediately after the driver reported all tasks done.",
+  "token_estimate": 96674,
+  "token_estimate_method": "Cline session token counter (operator-side monitor of the autonomous loop). Ralph's per-iteration cursor-agent token usage is not separately exposed; the recorded figure under-counts the agent-side spend by an unknown factor.",
+  "prompt_sha256": null,
+  "prompt_path": "research/agent-plan-comparison-final/runs/gpt-5-5/worker-video-feature/ralph/planning/",
+  "benchmark": "worker-video-feature",
+  "operator": "dev",
+  "exit_reason": "completed",
+  "truncated": false,
+  "input_plan": {
+    "source_dir": "research/agent-plan-comparison-final/runs/gpt-5-5/worker-video-feature/ralph/planning/",
+    "anchor_file": "RALPH_TASK.md",
+    "task_count_input": 6,
+    "task_count_executed": 6,
+    "tasks_skipped": []
+  },
+  "target_repo": {
+    "remote": "cognitiverun/core-services",
+    "starting_ref": "30b69674f394fc7c13792ce035eb6878b75c4626",
+    "starting_sha": "30b69674f394fc7c13792ce035eb6878b75c4626",
+    "execution_branch": "bench/ralph-worker-video-feature-20260517T205246Z",
+    "ending_sha": "30b69674f394fc7c13792ce035eb6878b75c4626",
+    "uncommitted_when_captured": true,
+    "commit_policy_note": "Per workspace AGENTS.md: agents do not commit unless explicitly asked. Source diff captured under source-diff/."
+  },
+  "validators": {
+    "command": "npm test (vitest --run, @cloudflare/vitest-pool-workers)",
+    "baseline_tests_before": 56,
+    "tests_after": 69,
+    "tests_added": 13,
+    "all_green": true,
+    "test_output_artifact": "test-output.txt"
+  },
+  "diff_stats": {
+    "files_changed": 7,
+    "insertions": 446,
+    "deletions": 3,
+    "by_file_changed_lines": {
+      "PLAN.md": 190,
+      "RALPH_TASK.md": 27,
+      ".../worker/cdnserver/src/index.ts": 28,
+      ".../worker/cdnserver/src/parser.ts": 2,
+      ".../worker/cdnserver/src/types.ts": 22,
+      ".../cdnserver/test/index.spec.ts": 136,
+      ".../cdnserver/test/parser.spec.ts": 44
+    },
+    "by_file_note": "Per-file values are total changed lines (insertions + deletions) as reported by `git diff --stat`. The aggregate +/- split is captured at insertions/deletions; per-file split would require parsing source-diff/*.patch.",
+    "source_diff_path": "source-diff/core-services.patch"
+  },
+  "plan_deviations_observed_count": 1,
+  "plan_deviations_observed_path": "execution/deviations.json",
+  "cost_estimate_usd": 2.1752,
+  "cost_estimate_method": "rate-sheet weighted 30/70: token_estimate × 22.5 USD/M-tokens (input/output split not exposed by Cline/Cursor footer).",
+  "notes_pending": "Editorial cross-model narrative (defect convergence, regex-trap outcome, team_access count cross-leg accuracy, RALPH_TASK.md workspace-rule firing asymmetry, etc.) is deferred to the scoring + paper-update chat per Part E. This metadata.json captures only the structural fields synthesised from on-disk artefacts."
+}

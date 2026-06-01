@@ -1,0 +1,92 @@
+{
+  "tool": "opencode",
+  "tool_version": "1.15.13",
+  "model": "claude-opus-4-8",
+  "model_provider_string": "amazon-bedrock/anthropic.claude-opus-4-8",
+  "model_variant": "high",
+  "mcp_servers": [
+    "github"
+  ],
+  "workspace_clean": false,
+  "leg_kind": "execution",
+  "started_at": "2026-05-31T22:15:39Z",
+  "ended_at": "2026-05-31T22:44:23Z",
+  "wall_seconds": 1724,
+  "token_estimate": 39454515,
+  "token_estimate_method": "opencode session export, summed across all token blocks: input + output + cache.read + cache.write",
+  "token_detail": {
+    "blocks": 251,
+    "input": 750,
+    "output": 343752,
+    "cache_read": 35903325,
+    "cache_write": 3206688,
+    "total_billable": 39454515,
+    "cost_usd": 46.591013
+  },
+  "cost_estimate_usd": 46.5910,
+  "cost_estimate_method": "opencode session export `cost` field (summed across token blocks by tools/opencode/opencode_run.sh)",
+  "prompt_sha256": null,
+  "prompt_path": "research/agent-plan-comparison-final/runs/claude-opus-4-8/personal-blog-scaffold/opencode/planning/",
+  "benchmark": "personal-blog-scaffold",
+  "exit_reason": "completed",
+  "truncated": false,
+  "operator": "dev",
+  "screenshots_present": [],
+  "session_id": "ses_17fe49639ffegXdKtvH4pR1lMT",
+  "baseline_sha": "486761c7afe573f4125bb8c28ea152954fa39753",
+  "target_repo": {
+    "remote": "cognitiverun/personal-site",
+    "starting_ref": "main",
+    "execution_branch": "bench/opencode-personal-blog-scaffold-claude-opus-4-8-20260531T221529Z",
+    "ending_sha": "47b840f0236a81e9ab591d8d76319814e5e9e91f",
+    "commit_protocol": "incremental commits to the dedicated branch via the GitHub MCP; branch never merged"
+  },
+  "mcp_calls_summary": {
+    "total": 27,
+    "by_tool": {
+      "github_create_or_update_file": 20,
+      "github_push_files": 4,
+      "github_list_branches": 1,
+      "github_get_file_contents": 1,
+      "github_create_branch": 1
+    },
+    "by_server": {
+      "github": 27
+    },
+    "all_bench_pinned": true,
+    "bench_ref": "main",
+    "details_path": "transcripts/session-export.json"
+  },
+  "builtin_tool_calls": {
+    "total": 97,
+    "by_tool": {
+      "bash": 41,
+      "write": 31,
+      "read": 12,
+      "edit": 10,
+      "todowrite": 3
+    }
+  },
+  "mcp_required_failures": [],
+  "mcp_auth_failures": [
+    "Atlassian-MCP-Server"
+  ],
+  "mcp_auth_failures_note": "Benign noise from the operator's global opencode config; the Atlassian MCP is not required for this GitHub-only bench and its auth failure did not affect the execution leg (the GitHub MCP authenticated and served all 27 commit/read calls).",
+  "validators": {
+    "command": "npm install && npm run build (astro build)",
+    "exit_code": 0,
+    "all_green": true,
+    "post_hoc_only": true,
+    "pages_built": 8,
+    "result": "passed",
+    "test_output_artifact": "test-output.txt"
+  },
+  "diff_stats": {
+    "files_changed": 29,
+    "insertions": 1649,
+    "deletions": 2,
+    "source_diff_path": "source-diff/personal-site.patch"
+  },
+  "plan_deviations_observed": [],
+  "notes": "opencode execution leg under claude-opus-4-8 on the personal-blog-scaffold bench. Driven by `opencode run` (native headless mode) via tools/opencode/opencode_run.sh; no IDE/Cline involvement. 124 total tool calls (27 via the GitHub MCP, 97 via opencode builtins). Unlike the worker-video-feature and github-repository-bootstrap execution legs (0 MCP calls — MCP disabled), this execution leg uses the GitHub MCP as its commit channel: it created the dedicated branch and pushed work via a mix of 20 create_or_update_file + 4 push_files calls (per-file + batched commits), never merging to main. Build (astro build) passes post-hoc into test-output.txt; 8 pages built across en/es. token_estimate is cache-inclusive per the opencode convention and is NOT directly comparable to Cursor's input/output-only footer counts; the 39.45M figure is dominated by 35.9M cache-read tokens."
+}

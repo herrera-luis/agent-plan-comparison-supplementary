@@ -1,0 +1,78 @@
+{
+  "tool": "cursor",
+  "tool_version": "Cursor (Agent Mode, gpt-5-5)",
+  "model": "gpt-5-5",
+  "mcp_servers": [],
+  "mcp_servers_note": "Execution legs run with MCP disabled by design (the prompt + plan carry all the information the agent needs; we want diffs to reflect agent reasoning, not MCP fetches).",
+  "workspace_clean": false,
+  "leg_kind": "execution",
+  "started_at": "2026-05-18T01:12:04Z",
+  "ended_at": "2026-05-18T01:17:29Z",
+  "wall_seconds": 325,
+  "wall_seconds_note": "Operator-stamped via `date -u` immediately before kicking off the execution leg and immediately after the driver reported all tasks done.",
+  "token_estimate": 129700,
+  "token_estimate_method": "Cursor chat-footer cumulative-token counter, transcribed by operator at capture-exec time.",
+  "prompt_sha256": null,
+  "prompt_path": "research/agent-plan-comparison-final/runs/gpt-5-5/worker-video-feature/cursor/planning/",
+  "benchmark": "worker-video-feature",
+  "operator": "dev",
+  "exit_reason": "completed",
+  "truncated": false,
+  "input_plan": {
+    "source_path": "research/agent-plan-comparison-final/runs/gpt-5-5/worker-video-feature/cursor/planning/plan.md",
+    "task_count_input": null,
+    "task_count_executed": null,
+    "tasks_skipped": []
+  },
+  "target_repo": {
+    "remote": "cognitiverun/core-services",
+    "starting_ref": "30b69674f394fc7c13792ce035eb6878b75c4626",
+    "starting_sha": "30b69674f394fc7c13792ce035eb6878b75c4626",
+    "execution_branch": "bench/cursor-worker-video-feature-20260518T011140Z",
+    "ending_sha": "30b69674f394fc7c13792ce035eb6878b75c4626",
+    "uncommitted_when_captured": true,
+    "commit_policy_note": "Per workspace AGENTS.md: agents do not commit unless explicitly asked. Source diff captured under source-diff/."
+  },
+  "validators": {
+    "command": "npm test (vitest --run, @cloudflare/vitest-pool-workers)",
+    "baseline_tests_before": 56,
+    "tests_after": 71,
+    "tests_added": 15,
+    "all_green": true,
+    "test_output_artifact": "test-output.txt"
+  },
+  "diff_stats": {
+    "files_changed": 11,
+    "insertions": 447,
+    "deletions": 3,
+    "by_file_changed_lines": {
+      "RALPH_TASK.md": 40,
+      ".../worker/cdnserver/src/index.ts": 31,
+      ".../worker/cdnserver/src/parser.ts": 2,
+      ".../worker/cdnserver/src/types.ts": 3,
+      ".../cdnserver/test/index.spec.ts": 156,
+      ".../cdnserver/test/parser.spec.ts": 58,
+      ".../.openspec.yaml": 2,
+      ".../design.md": 48,
+      ".../proposal.md": 27,
+      ".../specs/cdnserver-video-delivery/spec.md": 58,
+      ".../tasks.md": 25
+    },
+    "by_file_note": "Per-file values are total changed lines (insertions + deletions) as reported by `git diff --stat`. The aggregate +/- split is captured at insertions/deletions; per-file split would require parsing source-diff/*.patch.",
+    "source_diff_path": "source-diff/core-services.patch"
+  },
+  "plan_deviations_observed_count": 0,
+  "plan_deviations_observed_path": "execution/deviations.json",
+  "mcp_calls_summary": {
+    "total": 0,
+    "by_tool": {},
+    "by_server": {},
+    "all_bench_pinned": null,
+    "bench_ref": null,
+    "details_path": "mcp-calls.txt",
+    "details_path_note": "Execution legs run with MCP disabled by design; mcp-calls.txt confirms `None` for this leg."
+  },
+  "cost_estimate_usd": 2.9183,
+  "cost_estimate_method": "rate-sheet weighted 30/70: token_estimate × 22.5 USD/M-tokens (input/output split not exposed by Cline/Cursor footer).",
+  "notes_pending": "Editorial cross-model narrative (defect convergence, regex-trap outcome, team_access count cross-leg accuracy, RALPH_TASK.md workspace-rule firing asymmetry, etc.) is deferred to the scoring + paper-update chat per Part E. This metadata.json captures only the structural fields synthesised from on-disk artefacts."
+}

@@ -1,0 +1,55 @@
+\begin{tikzpicture}[
+  font=\small,
+  box/.style={
+    draw, rounded corners=2pt,
+    minimum width=38mm, align=center, inner sep=2pt, fill=white,
+  },
+  surface/.style   ={box, fill=blue!7,   draw=blue!50!black,  minimum height=8mm},
+  artefact/.style  ={box, fill=orange!10, draw=orange!60!black, font=\small\ttfamily, minimum height=18mm},
+  validator/.style ={box, fill=green!10, draw=green!50!black, font=\small\ttfamily, minimum height=12mm},
+  arrow/.style     ={-Stealth, thick},
+  hdr/.style       ={font=\bfseries, anchor=center},
+]
+
+\def\colsep{14mm}
+\def\rowsep{4mm}
+
+\coordinate (origin) at (0,0);
+
+\node[hdr] (hdr-cur) at (origin)               {cursor};
+\node[hdr] (hdr-osp) at ($(hdr-cur) + (50mm,0)$) {openspec};
+\node[hdr] (hdr-ral) at ($(hdr-osp) + (50mm,0)$) {ralph};
+\node[hdr] (hdr-ocd) at ($(hdr-ral) + (50mm,0)$) {opencode};
+
+\node[surface,   below=2mm    of hdr-cur] (cur1) {Operator + Cursor};
+\node[surface,   below=\rowsep of cur1]   (cur2) {Plan Mode session};
+\node[artefact,  below=\rowsep of cur2]   (cur3) {{\textasciitilde}/.cursor/plans/\\<hash>.plan.md};
+\node[validator, below=\rowsep of cur3]   (cur4) {(none --- human review)};
+
+\node[surface,   below=2mm    of hdr-osp] (osp1) {Headless agent runtime};
+\node[surface,   below=\rowsep of osp1]   (osp2) {/opsx-propose};
+\node[artefact,  below=\rowsep of osp2]   (osp3) {proposal.md\\design.md\\specs/.../spec.md\\tasks.md};
+\node[validator, below=\rowsep of osp3]   (osp4) {openspec validate\\--strict};
+
+\node[surface,   below=2mm    of hdr-ral] (ral1) {Ralph wrapper};
+\node[surface,   below=\rowsep of ral1]   (ral2) {Single iteration};
+\node[artefact,  below=\rowsep of ral2]   (ral3) {PLAN.md (in git)};
+\node[validator, below=\rowsep of ral3]   (ral4) {test\_command\\(content presence)};
+
+\node[surface,   below=2mm    of hdr-ocd] (ocd1) {opencode native runtime};
+\node[surface,   below=\rowsep of ocd1]   (ocd2) {opencode run\\-{}-format json};
+\node[artefact,  below=\rowsep of ocd2]   (ocd3) {OPENCODE\_PLAN.md\\session-export.json};
+\node[validator, below=\rowsep of ocd3]   (ocd4) {(none --- session\\export is the audit)};
+
+\foreach \x in {cur,osp,ral,ocd} {
+  \draw[arrow] (\x 1) -- (\x 2);
+  \draw[arrow] (\x 2) -- (\x 3);
+  \draw[arrow] (\x 3) -- (\x 4);
+}
+
+\node[draw, dotted, fit=(cur1)(cur4), inner xsep=2.5mm, inner ysep=2.5mm] {};
+\node[draw, dotted, fit=(osp1)(osp4), inner xsep=2.5mm, inner ysep=2.5mm] {};
+\node[draw, dotted, fit=(ral1)(ral4), inner xsep=2.5mm, inner ysep=2.5mm] {};
+\node[draw, dotted, fit=(ocd1)(ocd4), inner xsep=2.5mm, inner ysep=2.5mm] {};
+
+\end{tikzpicture}

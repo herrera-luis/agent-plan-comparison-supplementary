@@ -1,0 +1,89 @@
+{
+  "tool": "ralph",
+  "tool_version": "ralph-loop (auto-iteration) + Cline 3.x (gpt-5-5 via OpenAI API)",
+  "model": "gpt-5-5",
+  "mcp_servers": [
+    "github"
+  ],
+  "mcp_servers_note": "Unlike the worker-video-feature ralph execution leg (MCP disabled, uncommitted), this bench's execution leg keeps the GitHub MCP enabled as the commit channel: the loop pushed incremental commits to the dedicated branch (ending SHA differs from the pinned base).",
+  "workspace_clean": false,
+  "leg_kind": "execution",
+  "started_at": "2026-06-01T02:03:27Z",
+  "ended_at": "2026-06-01T02:20:52Z",
+  "wall_seconds": 1045,
+  "wall_seconds_note": "Operator-stamped via `date -u` immediately before kicking off the autonomous loop and immediately after it reported all tasks done.",
+  "token_estimate": 90289,
+  "token_estimate_method": "Cline session token counter (operator-side monitor of the autonomous loop), transcribed from the chat footer at end of execution leg. Ralph's per-iteration agent token usage is not separately exposed; the recorded figure may under-count agent-side spend by an unknown factor.",
+  "prompt_sha256": null,
+  "prompt_path": "research/agent-plan-comparison-final/runs/gpt-5-5/personal-blog-scaffold/ralph/planning/",
+  "benchmark": "personal-blog-scaffold",
+  "operator": "dev",
+  "exit_reason": "completed",
+  "truncated": false,
+  "input_plan": {
+    "source_dir": "research/agent-plan-comparison-final/runs/gpt-5-5/personal-blog-scaffold/ralph/planning/",
+    "anchor_file": "RALPH_TASK.md",
+    "task_count_input": null,
+    "task_count_executed": null,
+    "tasks_skipped": []
+  },
+  "target_repo": {
+    "remote": "cognitiverun/personal-site",
+    "starting_ref": "main",
+    "starting_sha": "486761c7afe573f4125bb8c28ea152954fa39753",
+    "execution_branch": "bench/ralph-personal-blog-scaffold-gpt-5-5-20260601T020327Z",
+    "ending_sha": "885ceb498629c04b4422e6bc403fce31217b0c21",
+    "commit_protocol": "incremental commits to the dedicated branch via the GitHub MCP; branch never merged"
+  },
+  "mcp_calls_summary": {
+    "captured": false,
+    "note": "The execution leg committed to the dedicated branch via the GitHub MCP (ending SHA 885ceb49 differs from the pinned base 486761c7, so the MCP commit path was exercised), but Cline does not export per-call MCP logs and the calls were not separately enumerated. n/c by convention — see HANDOFF-GPT55-RERUN.md."
+  },
+  "diff_stats": {
+    "files_changed": 24,
+    "insertions": 981,
+    "deletions": 2,
+    "by_file_changed_lines": {
+      "README.md": 13,
+      "astro.config.mjs": 18,
+      "package.json": 25,
+      "scripts/check-build.mjs": 102,
+      "src/components/ArticleCallout.astro": 27,
+      "src/components/ArticleMeta.astro": 17,
+      "src/components/LanguageSwitcher.astro": 22,
+      "src/components/Nav.astro": 16,
+      "src/content/articles.ts": 40,
+      "src/content/articles/sample-article/en/README.mdx": 25,
+      "src/content/articles/sample-article/es/README.mdx": 25,
+      "src/content/config.ts": 17,
+      "src/data/site.ts": 11,
+      "src/i18n/dictionary.ts": 136,
+      "src/i18n/routes.ts": 41,
+      "src/layouts/ArticleLayout.astro": 37,
+      "src/layouts/BaseLayout.astro": 68,
+      "src/pages/[locale]/about.astro": 20,
+      "src/pages/[locale]/articles/[slug].astro": 33,
+      "src/pages/[locale]/index.astro": 42,
+      "src/pages/[locale]/rss.xml.ts": 32,
+      "src/pages/index.astro": 15,
+      "src/styles/global.css": 192,
+      "tsconfig.json": 9
+    },
+    "by_file_note": "Per-file values are total changed lines (insertions + deletions) as reported by `git diff --stat` between the pinned base (486761c7) and the produced branch tip (885ceb49). Leanest of the gpt-5-5 blog drivers (no committed lockfile, no separate sitemap route); ships a scripts/check-build.mjs built-output validator.",
+    "source_diff_path": "source-diff/personal-site.patch"
+  },
+  "validators": {
+    "command": "npm install && npm run build (astro build) + scripts/check-build.mjs",
+    "all_green": true,
+    "post_hoc_only": true,
+    "build_errors": 0,
+    "pages_built": 6,
+    "test_suite_added": "scripts/check-build.mjs (built-output validation)",
+    "test_output_artifact": "test-output.txt"
+  },
+  "plan_deviations_observed_count": 0,
+  "plan_deviations_observed_path": "execution/deviations.json",
+  "cost_estimate_usd": 2.0315,
+  "cost_estimate_method": "rate-sheet weighted 30/70: token_estimate × 22.5 USD/M-tokens (input/output split not exposed by Cline footer).",
+  "notes_pending": "Editorial cross-model narrative (leanest diff + lowest page count of the gpt-5-5 blog drivers; whether the 6-page build under-covers the article-index/sitemap surface vs the openspec 10-page build; comparison vs claude-opus-4-8) is deferred to the scoring + paper-update chat per Part E. This metadata.json captures only the structural fields synthesised from on-disk artefacts."
+}

@@ -1,0 +1,55 @@
+{
+  "tool": "cursor",
+  "tool_version": "Cursor (Agent Mode, gpt-5-5)",
+  "model": "gpt-5-5",
+  "mcp_servers": [
+    "github",
+    "Atlassian-MCP-Server"
+  ],
+  "workspace_clean": true,
+  "leg_kind": "planning",
+  "started_at": "2026-05-18T01:09:15Z",
+  "ended_at": "2026-05-18T01:11:14Z",
+  "wall_seconds": 119,
+  "wall_seconds_note": "Operator-stamped via `date -u` immediately before sending the desanitized prompt body to the driver and immediately after the driver reported the planning leg complete (Cursor plan card rendered for tool=cursor; Cline /opsx-propose returned for tool=openspec; Cline planning prompt returned RALPH_TASK.md + PLAN.md for tool=ralph). Excludes operator-side handling.",
+  "token_estimate": 74500,
+  "token_estimate_method": "Cursor chat-footer cumulative-token counter, transcribed by operator at capture-plan time.",
+  "prompt_sha256": "ce61ca3faf86861c357b0a4eea9304496ee19aedfa74bb43e0ff8b00dc4ce079",
+  "prompt_path": "research/agent-plan-comparison-final/prompts/worker-video-feature.md",
+  "benchmark": "worker-video-feature",
+  "operator": "dev",
+  "exit_reason": "completed",
+  "truncated": false,
+  "cost_estimate_usd": 1.6763,
+  "cost_estimate_method": "rate-sheet weighted 30/70: token_estimate × 22.5 USD/M-tokens (input/output split not exposed by Cline/Cursor footer).",
+  "screenshots_present": [
+    "01-plan-footer.png",
+    "02-exec-footer.png"
+  ],
+  "plan_artefact": "plan.md",
+  "mcp_calls_summary": {
+    "total": 16,
+    "by_tool": {
+      "Atlassian-MCP-Server_getJiraIssue": 1,
+      "Atlassian-MCP-Server_getJiraIssueRemoteIssueLinks": 1,
+      "github_getMe": 1,
+      "github_get_file_contents": 13
+    },
+    "by_server": {
+      "Atlassian-MCP-Server": 2,
+      "github": 14
+    },
+    "all_bench_pinned": true,
+    "bench_ref": "feature/bench-30b69674",
+    "bench_pinned_calls": 12,
+    "bench_pinned_repo": "cognitiverun/core-services",
+    "cross_repo_immutable_sha_calls": 1,
+    "cross_repo_immutable_sha": "5ee5fcb7569be2caec36b348181d8b17b43dbe7b",
+    "non_pinned_orientation_calls": 3,
+    "non_pinned_orientation_calls_note": "calls 1, 2, 16: Atlassian getJiraIssue / getJiraIssueRemoteIssueLinks (repo-pin n/a) and github getMe (identity orientation, no repo target). All 12 core-services calls and the 1 api cross-repo call carry an explicit immutable ref.",
+    "details_path": "mcp-calls.txt",
+    "scoring_view_path": "mcp-calls.md",
+    "details_path_note": "mcp-calls.txt is the operator-curated raw dump (full request/response bodies, redacted via tools/guard/redact.sed); mcp-calls.md is the clean scoring-view enumeration (one row per call with arg-key fields and result gist)."
+  },
+  "notes_pending": "Editorial cross-model narrative (driver substitution, MCP-call breakdown, planning-leg defect surface, comparison vs rev-3 / v1 Opus) is deferred to the scoring + paper-update chat per Part E of HANDOFF-GPT55-RERUN.md. This metadata.json captures only the structural fields that can be synthesised from on-disk artefacts."
+}

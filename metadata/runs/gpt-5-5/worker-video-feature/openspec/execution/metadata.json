@@ -1,0 +1,68 @@
+{
+  "tool": "openspec",
+  "tool_version": "openspec 0.21.0 (npx) + Cline 3.x (gpt-5-5 via OpenAI API)",
+  "model": "gpt-5-5",
+  "mcp_servers": [],
+  "mcp_servers_note": "Execution legs run with MCP disabled by design (the prompt + plan carry all the information the agent needs; we want diffs to reflect agent reasoning, not MCP fetches).",
+  "workspace_clean": false,
+  "leg_kind": "execution",
+  "started_at": "2026-05-17T21:51:37Z",
+  "ended_at": "2026-05-17T21:57:05Z",
+  "wall_seconds": 328,
+  "wall_seconds_note": "Operator-stamped via `date -u` immediately before kicking off the execution leg and immediately after the driver reported all tasks done.",
+  "token_estimate": 119223,
+  "token_estimate_method": "Cline session token counter, transcribed from the chat footer at end of execution leg.",
+  "prompt_sha256": null,
+  "prompt_path": "research/agent-plan-comparison-final/runs/gpt-5-5/worker-video-feature/openspec/planning/",
+  "benchmark": "worker-video-feature",
+  "operator": "dev",
+  "exit_reason": "completed",
+  "truncated": false,
+  "input_plan": {
+    "source_dir": "research/agent-plan-comparison-final/runs/gpt-5-5/worker-video-feature/openspec/planning/",
+    "task_count_input": 21,
+    "task_count_executed": 21,
+    "tasks_skipped": []
+  },
+  "target_repo": {
+    "remote": "cognitiverun/core-services",
+    "starting_ref": "30b69674f394fc7c13792ce035eb6878b75c4626",
+    "starting_sha": "30b69674f394fc7c13792ce035eb6878b75c4626",
+    "execution_branch": "bench/openspec-worker-video-feature-20260517T215137Z",
+    "ending_sha": "30b69674f394fc7c13792ce035eb6878b75c4626",
+    "uncommitted_when_captured": true,
+    "commit_policy_note": "Per workspace AGENTS.md: agents do not commit unless explicitly asked. Source diff captured under source-diff/."
+  },
+  "validators": {
+    "command": "npm test (vitest --run, @cloudflare/vitest-pool-workers)",
+    "baseline_tests_before": 56,
+    "tests_after": 73,
+    "tests_added": 17,
+    "all_green": true,
+    "test_output_artifact": "test-output.txt"
+  },
+  "diff_stats": {
+    "files_changed": 10,
+    "insertions": 830,
+    "deletions": 7,
+    "by_file_changed_lines": {
+      ".../worker/cdnserver/src/index.ts": 171,
+      ".../worker/cdnserver/src/parser.ts": 2,
+      ".../worker/cdnserver/src/types.ts": 26,
+      ".../cdnserver/test/index.spec.ts": 282,
+      ".../cdnserver/test/parser.spec.ts": 60,
+      ".../add-video-delivery-cdnserver/.openspec.yaml": 2,
+      ".../add-video-delivery-cdnserver/design.md": 142,
+      ".../add-video-delivery-cdnserver/proposal.md": 26,
+      ".../specs/video-delivery-cdnserver/spec.md": 91,
+      ".../add-video-delivery-cdnserver/tasks.md": 35
+    },
+    "by_file_note": "Per-file values are total changed lines (insertions + deletions) as reported by `git diff --stat`. The aggregate +/- split is captured at insertions/deletions; per-file split would require parsing source-diff/*.patch.",
+    "source_diff_path": "source-diff/core-services.patch"
+  },
+  "plan_deviations_observed_count": 0,
+  "plan_deviations_observed_path": "execution/deviations.json",
+  "cost_estimate_usd": 2.6825,
+  "cost_estimate_method": "rate-sheet weighted 30/70: token_estimate × 22.5 USD/M-tokens (input/output split not exposed by Cline/Cursor footer).",
+  "notes_pending": "Editorial cross-model narrative (defect convergence, regex-trap outcome, team_access count cross-leg accuracy, RALPH_TASK.md workspace-rule firing asymmetry, etc.) is deferred to the scoring + paper-update chat per Part E. This metadata.json captures only the structural fields synthesised from on-disk artefacts."
+}

@@ -1,0 +1,77 @@
+{
+  "tool": "opencode",
+  "tool_version": "1.15.13",
+  "model": "claude-opus-4-8",
+  "model_provider_string": "amazon-bedrock/anthropic.claude-opus-4-8",
+  "mcp_servers": [
+    "Atlassian-MCP-Server",
+    "github"
+  ],
+  "workspace_clean": true,
+  "leg_kind": "planning",
+  "started_at": "2026-05-31T04:22:44Z",
+  "ended_at": "2026-05-31T04:27:37Z",
+  "wall_seconds": 293,
+  "token_estimate": 6870261,
+  "token_estimate_method": "opencode session export, summed across all token blocks: input + output + cache.read + cache.write",
+  "token_detail": {
+    "blocks": 49,
+    "input": 144,
+    "output": 52590,
+    "cache_read": 5539794,
+    "cache_write": 1277733,
+    "total_billable": 6870261,
+    "cost_usd": 12.071198
+  },
+  "cost_estimate_usd": 12.0712,
+  "cost_estimate_method": "opencode session export `cost` field",
+  "prompt_sha256": "81c7abba1d95f4835186307d6fd7d373f9cf154cc0498bad43720d515d30b691",
+  "prompt_path": "research/agent-plan-comparison-final/prompts/worker-video-feature.md",
+  "benchmark": "worker-video-feature",
+  "exit_reason": "completed",
+  "truncated": false,
+  "operator": "dev",
+  "screenshots_present": [],
+  "session_id": "ses_183bade83ffeOstvYYYYFlJ4wF",
+  "baseline_sha": "30b69674f394fc7c13792ce035eb6878b75c4626",
+  "target_repo": {
+    "remote": "cognitiverun/core-services",
+    "starting_ref": "feature/bench-30b69674",
+    "execution_branch": null,
+    "ending_sha": null
+  },
+  "mcp_calls_summary": {
+    "total": 17,
+    "by_tool": {
+      "github_get_file_contents": 15,
+      "Atlassian-MCP-Server_getAccessibleAtlassianResources": 1,
+      "Atlassian-MCP-Server_getJiraIssue": 1
+    },
+    "by_server": {
+      "Atlassian-MCP-Server": 2,
+      "github": 15
+    },
+    "all_bench_pinned": true,
+    "bench_ref": "feature/bench-30b69674",
+    "details_path": "transcripts/session-export.json"
+  },
+  "builtin_tool_calls": {
+    "total": 6,
+    "by_tool": {
+      "todowrite": 4,
+      "bash": 1,
+      "write": 1
+    }
+  },
+  "mcp_required_failures": [],
+  "mcp_auth_failures": [],
+  "validators": {
+    "command": "OPENCODE_PLAN.md present and references task keywords",
+    "exit_code": 0,
+    "all_green": true,
+    "result": "passed"
+  },
+  "diff_stats": null,
+  "plan_deviations_observed": [],
+  "notes": "opencode planning leg under claude-opus-4-8 on the worker-video-feature bench. Driven by `opencode run` (native headless mode); no IDE/Cline involvement. 23 total tool calls (17 via MCP, 6 via opencode builtins)."
+}

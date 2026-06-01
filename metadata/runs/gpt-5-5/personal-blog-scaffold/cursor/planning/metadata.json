@@ -1,0 +1,48 @@
+{
+  "tool": "cursor",
+  "tool_version": "Cursor (Plan Mode, gpt-5-5)",
+  "model": "gpt-5-5",
+  "mcp_servers": [
+    "github"
+  ],
+  "workspace_clean": true,
+  "leg_kind": "planning",
+  "started_at": "2026-06-01T01:02:10Z",
+  "ended_at": "2026-06-01T01:03:16Z",
+  "wall_seconds": 66,
+  "wall_seconds_note": "Operator-stamped via `date -u` immediately before sending the desanitized prompt body to the Cursor Plan Mode session and immediately after the plan card rendered. Excludes operator-side handling.",
+  "token_estimate": 35500,
+  "token_estimate_method": "Cursor chat-footer cumulative-token counter, transcribed by operator at capture-plan time.",
+  "prompt_sha256": "b59225a1ee2d503dd0c1d08b4e669edc19196a74695008d7642206ba3763e13f",
+  "prompt_path": "research/agent-plan-comparison-final/prompts/personal-blog-scaffold.md",
+  "benchmark": "personal-blog-scaffold",
+  "operator": "dev",
+  "exit_reason": "completed",
+  "truncated": false,
+  "mcp_calls_summary": {
+    "total": 6,
+    "by_tool": {
+      "github_get_file_contents": 3,
+      "github_get_me": 1,
+      "github_list_branches": 1,
+      "github_list_commits": 1
+    },
+    "by_server": {
+      "github": 6
+    },
+    "all_bench_pinned": true,
+    "bench_ref": "main",
+    "details_path": "mcp-calls.md",
+    "scoring_view_path": "mcp-calls.md",
+    "details_path_note": "mcp-calls.txt is the operator-curated raw dump (full request/response bodies, redacted via tools/guard/redact.sed); mcp-calls.md is the clean scoring-view enumeration."
+  },
+  "cost_estimate_usd": 0.7988,
+  "cost_estimate_method": "rate-sheet weighted 30/70: token_estimate × 22.5 USD/M-tokens (input/output split not exposed by Cursor footer).",
+  "screenshots_present": [
+    "01-plan-footer.png",
+    "02-exec-footer.png"
+  ],
+  "plan_artefact": "plan.md",
+  "notes": "Planning leg for gpt-5-5 on personal-blog-scaffold. The planner read the greenfield cognitiverun/personal-site repo at the pinned main SHA (486761c7) via the GitHub MCP — 6 calls total (1 get_me orientation, 3 get_file_contents reading the root + README.md + .gitignore, 1 list_branches, 1 list_commits on main), all pin-compliant, no Jira. It then produced plan.md only (no commits in the planning leg). list_branches surfaced the three already-pushed claude-opus-4-8 bench branches; the planner ignored them and planned from main. Per-call enumeration in mcp-calls.md.",
+  "notes_pending": "Editorial cross-model narrative (heavier orientation vs claude-opus-4-8's 4-call planning leg; i18n completeness coverage) is deferred to the scoring + paper-update chat per Part E of HANDOFF-GPT55-RERUN.md. This metadata.json captures only the structural fields synthesised from on-disk artefacts."
+}

@@ -1,0 +1,120 @@
+\section{Procedural deviations}
+\label{app:procdev}
+
+Two procedural deviations from the prescribed protocol were observed
+on the operator-attended Cursor video-support bench execution legs during
+the study. Both are model-independent --- one is a property of the
+operator's local shell environment, the other of the two-phase
+Cursor OpenSpec workflow --- and neither recurs in the frozen
+Opus~4.8 Cursor capture (whose execution leg records zero plan
+deviations). They do not move the rubric scores; they are recorded as
+evidence about the operational fragility of an attended workflow vs a
+headless one.
+
+\subsection*{C.1 Shell-environment quirk on the video-support bench
+Cursor execution leg}
+
+A zsh \texttt{chpwd} hook (visible as
+\texttt{\_encode:25: command not found} in shell stderr) prevented
+\texttt{cd} from working inside sandboxed shell sessions. Mid-execution
+this caused several \texttt{git} commands to silently target the wrong
+repo (the workspace repo rather than the target repo). Recovered by
+switching to \texttt{git -C <abs-path>} for all repo operations and
+verifying branch placement before continuing. No source content was
+lost (file edits used absolute paths). The quirk is a property of the
+operator's local zsh environment, not of any one chat session.
+
+\subsection*{C.2 Workspace-routing quirk on two-phase
+\texttt{opsx-propose}~/~\texttt{opsx-apply} executions}
+
+On the captured run, the propose phase was first opened in the
+\texttt{agent-research} workspace --- the workspace where the
+planning chat had been authored --- so the agent initially scaffolded
+the OpenSpec change directory under that workspace's
+\texttt{openspec/changes/} tree, not under the target
+\texttt{core-services} checkout where the worker code lives. The
+operator detected the mis-route from \texttt{git status}, re-ran
+\texttt{openspec init <core-services-path> --tools cursor --force},
+moved the change directory across, and started the apply phase in a
+fresh Cursor window rooted at the target repo. The workflow trap is
+specific to two-phase OpenSpec executions in Cursor: the first
+phase implicitly inherits the workspace of the chat that owns the
+plan card, and the operator must explicitly re-root before phase two
+or the artefacts land in the wrong tree. It is a property of the
+two-phase Cursor workflow rather than of any one model.
+
+\subsection*{C.4 \texttt{terraform fmt -recursive} scope split on the
+single-file bench cells (cross-model)}
+
+The single-file bench prompt asks the planner to add one Terraform module
+declaration and verify the post-write tree formats cleanly via
+\texttt{terraform fmt -check -recursive}. The target repo carries
+13 pre-existing unformatted files unrelated to the requested change
+(unrelated service directories under \texttt{aws-identity-center/},
+\texttt{aws-tag-policies/}, \texttt{poc/SRE-6603/}, etc.). The
+canonical-pairing split surfaces on three of the four GPT-5.5
+single-file bench cells (OpenSpec, Ralph, OpenCode) and on neither of
+their Opus equivalents.
+
+\begin{itemize}
+\item \emph{Opus single-file bench / OpenSpec, Ralph, OpenCode} kept the
+change scope tight. The planner recognised that the 13 unrelated
+files were owned by separate service directories per
+\texttt{AGENTS.md}, ran
+\texttt{terraform fmt -check -recursive github/repositories/sre/}
+(exit 0) and \texttt{terraform fmt -check -diff} on the new file
+itself (exit 0), and recorded the global drift as a pre-existing
+condition in \texttt{deviations.json} without auto-reformatting.
+The execution-leg diffs are 6 files / +521 / $-$0 (OpenSpec),
+2 files / +442 / $-$0 (Ralph), and 2 files / +394 / $-$0 (OpenCode).
+\item \emph{GPT-5.5 single-file bench / OpenSpec, Ralph, OpenCode} all
+ran a repo-wide \texttt{terraform fmt -recursive} from the repo
+root to clear all 13 files of drift before re-running
+\texttt{terraform fmt -check -recursive} for the strict-clean
+postcondition. The execution-leg diffs are therefore 15 files /
++574 / $-$59 (OpenSpec), 15 files / +492 / $-$59 (Ralph), and
+15 files / +382 / $-$59 (OpenCode), with the 13 unrelated files
+contributing the bulk of the deletions on every row. The recorded
+\texttt{deviations.json} entries frame this as a precondition
+mismatch that the planner resolved unilaterally.
+\item \emph{Cursor / both models} kept the change scope tight on
+both cells (1 file / +254 / $-$0 under both Opus and GPT-5.5),
+because the single-file bench Cursor cells produce a Terraform module
+declaration in a sibling repo whose own root-module Terraform tree
+is clean.
+\end{itemize}
+
+Both response patterns produce a green strict-clean postcondition;
+neither violates the test plan. The cross-model split is consistent
+across canonical-pairing tools (OpenSpec, Ralph, OpenCode all
+behave the same way under each model), confirming the asymmetry is
+model-bound rather than tool-bound: GPT-5.5 pulls scope outward
+toward strict-postcondition closure, Opus pulls scope inward toward
+single-file-change minimality. The execution-leg metadata table
+(Table~\ref{tab:metadata-exec}) carries the diff-size asymmetry
+explicitly.
+
+\subsection*{C.5 Why these deviations matter}
+
+The deviations contribute to the broader cross-tool defect-convergence
+story discussed in Section~\ref{sec:discussion}. Across the eight
+(tool $\times$ leg) cells the study surfaces \emph{five} distinct
+defect categories: a regex passthrough trap (cursor and ralph under
+both models, OpenCode under GPT-5.5 only;
+Appendix~\ref{app:defect}), a plan-miscount on the single-file bench
+(OpenCode under Opus~4.8; Appendix~\ref{app:defect}), a
+shell-environment quirk (cursor, this appendix), a workspace-routing
+quirk specific to two-phase Cursor executions (cursor, this
+appendix), and a cross-model scope split on a precondition-mismatch
+fix (OpenSpec, Ralph, OpenCode under GPT-5.5; this appendix). The
+distribution of defects across surfaces is itself a finding: the
+operator-attended workflow accumulates the most distinct defect
+classes; the headless and Cline-driven workflows accumulate fewer
+distinct classes but heavier-tail individual defects (the regex
+passthrough trap reaches OpenSpec not at all, is caught by Ralph and
+OpenCode/GPT-5.5 through Node REPL pre-checks or vitest failures, and
+is avoided up front by OpenCode under Opus~4.8); the cross-model
+scope-resolution split appears on every canonical-pairing
+single-file bench cell under GPT-5.5 but on none of their Opus~4.8
+equivalents, confirming that asymmetry is model-bound rather than
+tool-bound.

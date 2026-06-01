@@ -1,0 +1,102 @@
+\section{Single-file bench results}
+\label{app:simple}
+
+This appendix reports the per-parameter score matrix
+(Table~\ref{tab:simple-matrix}) for
+\texttt{github-repository-bootstrap} under both model conditions, the
+benchmark whose prompt inlines the sibling Terraform module verbatim
+and therefore does not exercise external MCP integration.
+
+\begin{table}[h]
+\centering
+\caption{Per-parameter score matrix on the sixteen-parameter rubric
+for \texttt{github-repository-bootstrap} under both models. Rows
+1--10 are the artefact-and-process parameters
+(weights scaled to sum to $70$); rows 11--16 are the tool-surface
+parameters (each weight $5$). The MCP
+row is a uniform $3$ across all eight (tool, model) cells because the
+prompt inlines the sibling. The rows that shift between models are
+Parameter~5 (Code-reference accuracy: OpenCode lifts $4{\to}5$ under
+GPT-5.5 because the Opus~4.8 plan carries the $47$-vs-$53$
+\texttt{team\_access} count error, while Cursor drops $4{\to}3$) and
+Parameter~9 (Token cost: Cursor and OpenSpec each lift
+$3{\to}4$ under GPT-5.5, OpenCode lifts $2{\to}4$, Ralph is flat at
+$3/3$). Parameter~8 (Latency) is $5/5$ for OpenSpec: although its
+Opus~4.8 planning leg records a $2335$\,s raw wall span, that span is
+an attended-session measurement artefact (\S\ref{sec:threats}) scored
+anchor-5, matching its $181$\,s GPT-5.5 leg. Parameter~13 (Human-in-the-loop validation) does \emph{not}
+shift on this benchmark because OpenSpec and Ralph run
+Cline-as-extension under \emph{both} models (the driver is held
+constant). Source: \texttt{scoring/scores-opus48.csv} and
+\texttt{scoring/scores-gpt55.csv}.}
+\label{tab:simple-matrix}
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lr rr rr rr rr}
+\toprule
+ & & \multicolumn{2}{c}{cursor} & \multicolumn{2}{c}{openspec} & \multicolumn{2}{c}{ralph} & \multicolumn{2}{c}{opencode} \\
+ \cmidrule(lr){3-4} \cmidrule(lr){5-6} \cmidrule(lr){7-8} \cmidrule(lr){9-10}
+\textbf{Parameter} & \textbf{Wt} & Opus & G-5.5 & Opus & G-5.5 & Opus & G-5.5 & Opus & G-5.5 \\
+\midrule
+1.\ Artifact completeness                & 7    & 2 & 2 & \textbf{5} & \textbf{5} & 2 & 2 & 2 & 2 \\
+2.\ Requirement traceability             & 10.5 & 1 & 1 & 2          & 2          & 1 & 1 & 2 & 2 \\
+3.\ Task granularity                     & 7    & 3 & 3 & 4          & 4          & 4 & 4 & \textbf{5} & \textbf{5} \\
+4.\ Test-plan coverage                   & 10.5 & 3 & 3 & \textbf{5} & \textbf{5} & 4 & 4 & \textbf{5} & \textbf{5} \\
+5.\ Code-reference accuracy              & 7    & 4 & 3 & 3          & 3          & 3 & 3 & 4 & \textbf{5} \\
+6.\ MCP integration                      & 7    & 3 & 3 & 3          & 3          & 3 & 3 & 3 & 3 \\
+7.\ Reproducibility                      & 7    & 3 & 3 & \textbf{5} & \textbf{5} & 4 & 4 & 4 & 4 \\
+8.\ Latency                              & 3.5  & \textbf{5} & \textbf{5} & \textbf{5} & \textbf{5} & \textbf{5} & \textbf{5} & \textbf{5} & \textbf{5} \\
+9.\ Token cost                           & 3.5  & 3 & 4 & 3 & 4 & 3 & 3 & 2 & 4 \\
+10.\ Hand-off friction                   & 7    & \textbf{5} & \textbf{5} & \textbf{5} & \textbf{5} & \textbf{5} & \textbf{5} & \textbf{5} & \textbf{5} \\
+\midrule
+11.\ Tool licensing \& accessibility     & 5    & 2          & 2          & \textbf{5} & \textbf{5} & \textbf{5} & \textbf{5} & \textbf{5} & \textbf{5} \\
+12.\ Learning curve / time-to-productivity & 5  & \textbf{5} & \textbf{5} & 2          & 2          & 3          & 3 & 3 & 3 \\
+13.\ Human-in-the-loop validation        & 5    & 4          & 4          & 4          & 4          & 4          & 4 & 2 & 2 \\
+14.\ Autonomous capacity                 & 5    & 1          & 1          & 2          & 2          & \textbf{5} & \textbf{5} & 2 & 2 \\
+15.\ Runtime integration \& ergonomics   & 5    & \textbf{5} & \textbf{5} & 2          & 2          & 3          & 3 & 3 & 3 \\
+16.\ Code-review / hand-off review surface & 5  & 2          & 2          & \textbf{5} & \textbf{5} & 4          & 4 & 4 & 4 \\
+\midrule
+\textbf{Weighted total}                  & 100  & \textbf{3.050} & \textbf{3.010} & \textbf{3.765} & \textbf{3.795} & \textbf{3.475} & \textbf{3.465} & \textbf{3.540} & \textbf{3.675} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The single-file bench has no MCP discriminator under either model because
+the prompt inlines the sibling \texttt{agent-skillzz.tf} HCL module
+directly, removing the need for any external read. The four GitHub
+\texttt{get\_file\_contents} calls that OpenSpec and Ralph made and
+the single \texttt{get\_file\_contents} call that OpenCode made are
+recorded as SHA-pin verification of the sibling content, not as
+substantive plan input; Cursor made no MCP calls at all under
+either model. Parameter~6 is therefore a $3$ across all eight
+(tool, model) cells on this benchmark and the row carries no
+diagnostic weight here.
+
+The discriminating parameters on the single-file bench split into two
+groups. In the artefact-and-process group~(1--10), \texttt{openspec}
+saturates the structural anchors --- Parameters~1 (Artifact
+completeness: $2/5/2/2$), 4 (Test-plan coverage: $3/5/4/5$), and
+7 (Reproducibility: $3/5/4/4$) --- because the 4-artefact change
+directory plus strict validator force structural content the
+chat-resident and single-file plans never produce. OpenCode picks
+up the plan-content anchors --- Param~3 (Task granularity: $3/4/4/5$),
+Param~4 (Test-plan coverage: tied with OpenSpec at $5$), and Param~5
+(Code-reference accuracy: $4/3/3/4$ under Opus~4.8, with OpenCode's $4$
+reflecting the count error) --- which partly offset the structural
+deficit on the weighted total. The
+tool-surface group~(11--16) splits the rubric across all four
+tools: \texttt{cursor} owns Parameters~12 (Learning curve) and~15
+(Runtime integration); \texttt{openspec} owns Parameter~16
+(Code-review surface) at $5$ alone, with Parameter~11 (Licensing)
+tied at $5$ across OpenSpec, Ralph, and OpenCode; \texttt{ralph}
+owns Parameter~14 (Autonomous capacity). Parameter~13
+(Human-in-the-loop validation) is model-stable on this benchmark:
+OpenSpec, Ralph, and Cursor all sit at $4/4$ (the Cline-as-extension
+and chat surfaces expose the in-flight plan without a
+clarifying-question affordance under both models), and OpenCode stays
+at $2/2$ under its native headless runtime. The end-to-end gap
+between \texttt{openspec} and \texttt{cursor} on this benchmark
+under Opus~4.8 is $0.715$ on the full sixteen-parameter rubric; under
+GPT-5.5 the gap is $0.785$. OpenCode lands below OpenSpec under both
+models ($3.540$ vs $3.765$ under Opus~4.8, $3.675$ vs $3.795$ under
+GPT-5.5), so OpenSpec holds the single-file bench lead under either model.

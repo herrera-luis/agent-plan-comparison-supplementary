@@ -1,0 +1,254 @@
+\section{Cross-model details}\label{app:cross-model}
+
+This appendix collects the per-parameter, per-cell details behind the
+unified two-model results in Section~\ref{sec:results}. The headline
+tables in the main text already report the per-cell weighted totals
+(Table~\ref{tab:aggregate}), the unified cost picture
+(Table~\ref{tab:cost}), the wall-time and MCP volume
+(Table~\ref{tab:walltime}), and the operator-experience companion
+rubric (Table~\ref{tab:opx-summary}). What follows is the supporting
+detail: per-million-token rates, the per-parameter $\Delta$ matrix,
+and the operator-experience driver substitution explained.
+
+\subsection{Per-million-token rates}
+
+Table~\ref{tab:rate-substitution} lists the per-million-token rates and
+the 30/70 input/output mix used to convert token estimates to dollars.
+
+\begin{table}[h]
+\centering
+\caption{Per-million-token rates for the two model conditions used in
+this study. The 30/70 mix is the input/output split this paper assumes
+when computing per-leg cost from \texttt{token\_estimate} (typical of
+agentic chat sessions where the agent issues many short messages and
+emits long structured replies). Source: published vendor rates as of
+May 2026; captured at run time per model in
+\texttt{runs/<model>/\_rates.json}.}
+\label{tab:rate-substitution}
+\renewcommand{\arraystretch}{1.05}
+\setlength{\tabcolsep}{6pt}
+\begin{tabular}{lcccc}
+\toprule
+Model & Input \$/M & Output \$/M & Mix 30/70 \$/M & Source \\
+\midrule
+Claude Opus~4.8 &  5.00 & 25.00 & 19.00  & \citet{anthropic2026claude48} \\
+GPT-5.5         &  5.00 & 30.00 & 22.50  & \citet{openai2026gpt55} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Claude Opus~4.8 is the \emph{cheaper} model per token at the 30/70
+mix (\$19/M vs GPT-5.5's \$22.5/M, a $0.84\times$ ratio).
+Despite that rate advantage, most Opus~4.8 cells cost \emph{more}
+end-to-end than their GPT-5.5 counterparts because the Opus~4.8 legs
+emit more tokens (cf.\ Table~\ref{tab:cost} in the main text): on the
+rate-card path Cursor ($\$13.23$ vs $\$9.51$ three-bench), OpenSpec
+($\$13.05$ vs $\$9.84$), and Ralph ($\$13.84$ vs $\$8.75$) are all
+pricier under Opus~4.8, the per-token discount outweighed by volume.
+The widest gaps are on the heavy-token tools: Ralph's video-support cell
+($\$5.66$ Opus~4.8 vs $\$3.42$ GPT-5.5, a $0.60\times$ ratio) because
+the Opus~4.8 loop emits roughly double the tokens of its GPT-5.5
+counterpart. On the cache-aware (provider-reported) OpenCode cells the
+shift is the most extreme in the study: the blog bench Opus~4.8
+cell bills $\$49.57$ against GPT-5.5's $\$8.38$ ($0.169\times$),
+entirely because the Opus~4.8 OpenCode greenfield run is a $40.1$M-token
+deep-context session; the video-support bench OpenCode cell is similar
+($\$22.07$ vs $\$3.85$, $0.175\times$). OpenCode is therefore the
+cost outlier under Opus~4.8 on every bench, not the bargain it is
+under GPT-5.5.
+
+\subsection{Per-parameter $\Delta$ matrix}
+
+Table~\ref{tab:cross-model-delta} reports the per-parameter score
+deltas (GPT-5.5 minus Claude Opus~4.8) for every cell.
+
+\begin{table}[h]
+\centering
+\caption{Per-parameter score deltas, GPT-5.5 minus
+Claude Opus~4.8, on the sixteen-parameter rubric. A positive
+value means GPT-5.5 out-scored Opus~4.8 on that parameter. ``--'' marks
+an integer-equivalent cell (the two models land on the same anchor);
+small non-zero $\Delta$~Totals on otherwise-dashed rows reflect
+sub-anchor weighting rounding. The non-zero entries fall on five
+parameters --- 2 (Requirement traceability, the Ralph blog capability
+matrix), 4 (Test-plan coverage, on the blog bench), 5 (Code-reference
+accuracy), 8 (Latency), and 9 (Token cost). Crucially, Param~13
+(Human-in-the-loop validation) carries \emph{no} cross-model delta on
+any cell, because OpenSpec and Ralph run Cline-as-extension under
+\emph{both} models (driver held constant);
+columns 10--12 and 14--16 are ``--'' across the board because they
+score the tool surface, which is unchanged across models. $\Delta$~Total
+values are the canonical per-cell weighted differences from
+\texttt{tools/dump\_dual\_primary.py} over \texttt{scoring/scores-opus48.csv}
+and \texttt{scoring/scores-gpt55.csv}.}
+\label{tab:cross-model-delta}
+\renewcommand{\arraystretch}{1.05}
+\setlength{\tabcolsep}{2pt}
+\small
+\begin{tabular}{l l cccccccccccccccc r}
+\toprule
+Tool & Bench & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 & 12 & 13 & 14 & 15 & 16 & $\Delta$ Total \\
+\midrule
+\texttt{cursor}   & single-file  & -- & -- & -- & -- & $-1$ & -- & -- & --   & $+1$ & -- & -- & -- & -- & -- & -- & -- & $-0.040$ \\
+\texttt{cursor}   & video-support & -- & -- & -- & -- & --   & -- & -- & --   & --   & -- & -- & -- & -- & -- & -- & -- & $-0.010$ \\
+\texttt{cursor}   & blog    & -- & -- & -- & -- & $-1$ & -- & -- & --   & $+1$ & -- & -- & -- & -- & -- & -- & -- & $-0.035$ \\
+\texttt{openspec} & single-file  & -- & -- & -- & -- & --   & -- & -- & --   & $+1$ & -- & -- & -- & -- & -- & -- & -- & $+0.030$ \\
+\texttt{openspec} & video-support & -- & -- & -- & -- & $-1$ & -- & -- & --   & --   & -- & -- & -- & -- & -- & -- & -- & $-0.080$ \\
+\texttt{openspec} & blog    & -- & -- & -- & $-1$ & --   & -- & -- & $+2$ & --   & -- & -- & -- & -- & -- & -- & -- & $-0.035$ \\
+\texttt{ralph}    & single-file  & -- & -- & -- & -- & --   & -- & -- & --   & --   & -- & -- & -- & -- & -- & -- & -- & $-0.010$ \\
+\texttt{ralph}    & video-support & -- & -- & -- & -- & $-1$ & -- & -- & --   & --   & -- & -- & -- & -- & -- & -- & -- & $-0.080$ \\
+\texttt{ralph}    & blog    & -- & $-2$ & -- & $-1$ & $-1$ & -- & -- & --   & $+1$ & -- & -- & -- & -- & -- & -- & -- & $-0.350$ \\
+\texttt{opencode} & single-file  & -- & -- & -- & -- & $+1$ & -- & -- & --   & $+2$ & -- & -- & -- & -- & -- & -- & -- & $+0.135$ \\
+\texttt{opencode} & video-support & -- & -- & -- & -- & --   & -- & -- & --   & $+2$ & -- & -- & -- & -- & -- & -- & -- & $+0.060$ \\
+\texttt{opencode} & blog    & -- & -- & -- & $+1$ & $-1$ & -- & -- & --   & $+1$ & -- & -- & -- & -- & -- & -- & -- & $+0.070$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Reading the $\Delta$ matrix.} Five parameters carry every
+non-zero entry. Param~8 (Latency) moves only on the \texttt{openspec}
+blog cell: $+2$ (Opus~4.8's $1166$\,s anchor-3 vs GPT-5.5's $212$\,s
+anchor-5). The Opus~4.8 \texttt{openspec} single-file and video-support
+cells record longer raw wall spans ($2335$\,s and $23663$\,s), but
+those are attended-session measurement artefacts (\S\ref{sec:threats})
+scored anchor-5 under both models, so they carry no latency delta. No
+other tool moves on latency --- \texttt{cursor},
+\texttt{ralph}, and OpenCode all stay inside the anchor-5 band
+($<10$\,min) under both models on all three benchmarks. Param~9
+(Token cost) lifts toward GPT-5.5 on the token-heavy cells:
+\texttt{cursor} $+1$ (single-file, blog), \texttt{openspec} $+1$ (single-file),
+\texttt{ralph} $+1$ (blog), and OpenCode $+2$ on the single-file and
+video-support benches and $+1$ on the blog bench (the Opus~4.8 OpenCode cells
+are the cost outliers of the study). Param~5 (Code-reference accuracy) is
+mixed-sign and is the parameter most sensitive to plan precision:
+GPT-5.5 scores $+1$ on the OpenCode single-file bench (where the Opus~4.8
+plan carries the $47$-vs-$53$ \texttt{team\_access} count error) but
+$-1$ on Cursor single-file, OpenSpec video-support, Ralph video-support, and Cursor
+blog, Ralph blog, and OpenCode blog (where the Opus~4.8 plan body
+edges GPT-5.5's). The blog bench adds the only Param~2 and
+Param~4 movers in the study: Ralph's blog cell loses $2$ on Param~2
+(Requirement traceability) and $1$ on Param~4 (Test-plan coverage)
+under GPT-5.5 because the C1--C26 capability matrix and its per-task
+test linkage --- present under Opus~4.8 --- collapse to a free-text
+bullet list under GPT-5.5; OpenSpec and OpenCode each move $\pm1$ on
+Param~4 on the blog bench. These blog-bench Param~2/4 swings are what
+make Ralph's blog $\Delta$ the largest in the study ($-0.350$).
+Critically, Param~13 (Human-in-the-loop validation) carries \emph{no}
+delta on any cell --- including the blog cells, where OpenSpec and
+Ralph are scored $4/4$ under both models on the same Cline-refinement
+basis as their single-file/video-support cells --- because OpenSpec and Ralph run
+Cline-as-extension under \emph{both} models and the HiL surface is
+identical across the model axis. The remaining parameters (1, 3, 6, 7,
+10, and the tool-surface parameters 11, 12, 14, 15, 16) are
+model-stable on every cell.
+
+\paragraph{Implication for tool selection.} The rubric's headline
+properties are near-rank-stability (no per-tool ranking flips on the
+single-file and video-support benches, with the \emph{single} flip in the study
+on the blog bench where Ralph and OpenSpec swap the top two) and
+the cost-and-latency shift under model substitution. Teams who plan to
+rotate through frontier models over a project's lifetime should treat
+the per-tool ranking on the artefact-and-process and tool-surface
+dimensions as essentially model-invariant on existing-codebase tasks,
+but should expect breadth-oriented greenfield tasks to be more
+model-sensitive: the cross-model deltas are confined to Latency (an
+OpenSpec-specific Opus~4.8 outlier), Cost (token-volume driven), a
+$\pm1$ Code-reference swing, and the blog-bench Param~2/4 swing that
+drives the one rank flip. Teams targeting the cheapest end-to-end
+run should prefer OpenCode on GPT-5.5 on the video-support bench
+(\$3.85 cache-aware, the lowest in the matrix) and avoid OpenCode under
+Opus~4.8 on token-heavy work (\$49.57 on the blog bench, the
+highest in the study); Cursor is the cheapest rate-card tool under
+both models on the single-file bench
+(\$2.71 Opus~4.8, \$2.33 GPT-5.5, on top of the Cursor Pro floor).
+
+\subsection{Operator-experience stability}
+
+The operator-experience companion rubric in Table~\ref{tab:opx-summary}
+is model-stable for every tool, because each tool's \emph{driver} is
+held constant across the model axis:
+
+\begin{itemize}
+\item For \texttt{cursor}, the IDE chat surface is the same under
+both models; the only difference is the model picker. The OPX score
+holds at 4.75 under both.
+\item For \texttt{openspec} and \texttt{ralph}, both model conditions
+run Cline as a Cursor / VS Code extension (operator-attended), so the
+setup friction, time-to-first-viable-plan, in-flight iterability, and
+cognitive-load parameters (O1--O4) are identical across the model
+axis. The underlying file conventions are the tool's (4-artefact
+change directory for OpenSpec; \texttt{RALPH\_TASK.md} loop semantics
+for Ralph), and they do not change with the model.
+\item For OpenCode, both model conditions run the tool's own native
+headless runtime (\texttt{opencode run -m <provider/model>}), so its
+OPX is likewise model-stable.
+\end{itemize}
+
+Because the driver is constant per tool, the two OPX columns in
+Table~\ref{tab:opx-summary} are equal and the cross-model average
+equals each column; the rubric isolates a pure (tool) effect rather
+than a (tool, driver) interaction.
+
+\subsection{Headline cross-model reading}
+
+\begin{enumerate}
+\item \textbf{The rubric is robust to model substitution on eleven of
+twelve cells.} Per-cell deltas range from $-0.350$ to $+0.135$ and are
+mixed-sign; no per-tool ranking flips on the single-file or video-support benches,
+and the only flip in the study is on the blog bench
+(Ralph~$\leftrightarrow$~OpenSpec). There is no Param~13 (HiL)
+contribution because the driver is held constant; the shifts are
+concentrated in Param~8 (Latency, an OpenSpec-specific Opus~4.8
+outlier) and Param~9 (Cost), with a $\pm1$ Param~5 (Code-reference)
+swing on most cells and a larger Param~2/4 swing on the Ralph
+blog cell (its Opus-only capability matrix).
+\item \textbf{The video-support bench cross-model average favours
+OpenCode.} Complex-bench cross-model totals are OpenCode $3.955$,
+\texttt{ralph} $3.855$, \texttt{openspec} $3.830$, \texttt{cursor}
+$3.430$. OpenCode's lead comes from anchor-5 on Params~3, 4, 5 (Task
+granularity, Test-plan coverage, Code-reference accuracy) under both
+models plus Param~6 (MCP integration) at anchor-5 (17 verified
+Atlassian + GitHub calls under Opus~4.8, 16 under GPT-5.5). Cursor's
+video-support bench Param~6 also lands at anchor-5 (12 verified calls under
+Opus~4.8, 16 under GPT-5.5), which is the single clearest signal that
+the canonical-pairing tools and the operator-attended chat surface
+exhaust the same external grounding when given the same ticket. Among
+the Cline-driven tools the tool-surface parameters (notably Param~14,
+Autonomous capacity, where only \texttt{ralph} anchors at $5$) are
+what keep Ralph ahead of OpenSpec on the video-support bench.
+\item \textbf{Defect avoidance is mostly spec-format-bound, with one
+model-dependent exception.} The regex passthrough trap fires (or
+doesn't) chiefly by tool, not by model
+(Table~\ref{tab:regex-trap-cross-model} in the main text): it lands on
+Cursor and Ralph under both models and never on OpenSpec. The
+exception is OpenCode, which avoids the trap under Opus~4.8 (its plan
+diagnoses the digit and broadens the regex up front) but falls into it
+under GPT-5.5 --- the only cell where frontier-model substitution
+changes the trap outcome. OpenSpec's spec format avoids it under both
+models without inspecting the digit.
+\item \textbf{Opus~4.8 is cheaper per token yet pricier end-to-end on
+most cells.} At the 30/70 mix Opus~4.8 (\$19/M) undercuts GPT-5.5
+(\$22.5/M), but the Opus~4.8 legs emit more tokens, so Cursor,
+OpenSpec, and Ralph all cost more end-to-end under Opus~4.8 on the
+rate-card path. The OpenCode cells are the extreme case: the
+provider-reported Opus~4.8 blog cell bills \$49.57 against
+GPT-5.5's \$8.38 because the Opus~4.8 OpenCode run is a $40.1$M-token
+deep-context session. Teams choosing tools by cost should not adopt a
+single ``cheapest tool'' narrative without specifying the model: under
+GPT-5.5 OpenCode is the cheapest tool on the video-support bench (\$3.85
+cache-aware), while under Opus~4.8 OpenCode is the most expensive on
+every bench and Cursor is the cheapest rate-card tool on the single-file
+bench.
+\item \textbf{The two models differ on scope behaviour; the raw
+OpenSpec wall-time gap is a measurement artefact.} The Opus~4.8 OpenSpec
+planning legs record much longer raw wall spans ($23663$\,s
+video-support, $2335$\,s single-file) than the same cells under GPT-5.5
+($269$\,/\,$181$\,s), but those Opus spans are attended-session idle
+artefacts (\S\ref{sec:threats}) scored anchor-5 rather than genuine
+latency. The substantive model difference is scope behaviour: on the
+single-file bench the GPT-5.5 OpenSpec / Ralph / OpenCode loops
+autonomously remediate ambient \texttt{terraform fmt} drift where the
+Opus~4.8 cells deliberately scoped it out
+(Appendix~\ref{app:procdev}.4). Teams adopting either model should
+expect to revise their scope expectations accordingly.
+\end{enumerate}

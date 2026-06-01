@@ -1,0 +1,92 @@
+%=================================================================
+% Supplementary Materials for the MDPI Engineering Proceedings edition.
+% Build AFTER main.tex (this file reads main.aux via xr for back-refs).
+% Compile with tectonic (XeTeX); the pdftex driver option is omitted.
+%=================================================================
+\documentclass[engproc,supfile,submit,oneauthor]{Definitions/mdpi}
+
+\usepackage{placeins}
+
+%=================================================================
+% MDPI internal commands - do not modify
+\firstpage{1}
+\makeatletter
+\setcounter{page}{\@firstpage}
+\makeatother
+\pubvolume{1}
+\issuenum{1}
+\articlenumber{0}
+\pubyear{2026}
+\copyrightyear{2026}
+\datereceived{ }
+\dateaccepted{ }
+\datepublished{ }
+\hreflink{https://doi.org/}
+
+\Title{Benchmarking Planning in AI Coding Agents: A Cross-Model Study of Four Planning Surfaces}
+\TitleCitation{Benchmarking Planning in AI Coding Agents: A Cross-Model Study of Four Planning Surfaces}
+\Author{Luis Herrera-Izquierdo $^{1,}$*}
+\AuthorNames{Luis Herrera-Izquierdo}
+\AuthorCitation{Herrera-Izquierdo, L.}
+\address{$^{1}$ \quad Independent Researcher; lherrera.research@gmail.com}
+\corres{Correspondence: lherrera.research@gmail.com}
+\abstract{}
+
+%=================================================================
+\begin{document}
+
+\maketitle
+
+% MDPI supplementary numbering: Table S1, Table S2, ...; Figure S1, ...
+\renewcommand{\thetable}{S\arabic{table}}
+\renewcommand{\thefigure}{S\arabic{figure}}
+\setcounter{table}{0}
+\setcounter{figure}{0}
+\setcounter{section}{0}
+
+% Back-references to the MAIN article. The appendices cite main-article
+% sections/tables/figures by label; resolve them to the main article's
+% numbers directly (defined after the .aux is read so they are not
+% clobbered). The companion main PDF carries the live cross-links.
+\makeatletter
+\expandafter\gdef\csname r@sec:intro\endcsname{{1}{0}{}{}{}}
+\expandafter\gdef\csname r@sec:method\endcsname{{2}{0}{}{}{}}
+\expandafter\gdef\csname r@subsec:rubric\endcsname{{2.2}{0}{}{}{}}
+\expandafter\gdef\csname r@sec:results\endcsname{{3}{0}{}{}{}}
+\expandafter\gdef\csname r@subsec:defect-convergence\endcsname{{3.2}{0}{}{}{}}
+\expandafter\gdef\csname r@subsec:recommendation\endcsname{{3.5}{0}{}{}{}}
+\expandafter\gdef\csname r@sec:discussion\endcsname{{4}{0}{}{}{}}
+\expandafter\gdef\csname r@sec:threats\endcsname{{4.3}{0}{}{}{}}
+\expandafter\gdef\csname r@sec:conclusion\endcsname{{5}{0}{}{}{}}
+\expandafter\gdef\csname r@fig:arch\endcsname{{1}{0}{}{}{}}
+\expandafter\gdef\csname r@fig:aggregate\endcsname{{2}{0}{}{}{}}
+\expandafter\gdef\csname r@tab:aggregate\endcsname{{1}{0}{}{}{}}
+\expandafter\gdef\csname r@tab:regex-trap-cross-model\endcsname{{2}{0}{}{}{}}
+\expandafter\gdef\csname r@tab:opx-summary\endcsname{{3}{0}{}{}{}}
+\expandafter\gdef\csname r@tab:matrix\endcsname{{4}{0}{}{}{}}
+\makeatother
+
+\noindent This document contains the full rubric definitions, per-leg
+metadata, cost and wall-time tables, the plan-defect taxonomy, the
+procedural-deviation log, the cross-model robustness detail, and the
+canonical-pairing (\texttt{opencode}) analysis for the main article. It
+corresponds to Appendices~A--G of the source study at
+\url{https://github.com/herrera-luis/agent-research}. Table and figure
+numbers are prefixed ``S''; references of the form ``Table~1'' or
+``Section~3'' point to the main article.
+
+\input{appendix/A-rubric.tex}
+\input{appendix/B-per-leg-metadata.tex}
+\input{appendix/C-procedural-deviations.tex}
+\input{appendix/D-defect-taxonomy.tex}
+\input{appendix/E-simple-bench.tex}
+\input{appendix/F-cross-model-robustness.tex}
+\input{appendix/G-opencode-bench.tex}
+
+%=================================================================
+\reftitle{References}
+
+\externalbibliography{yes}
+\bibliography{references}
+
+\end{document}

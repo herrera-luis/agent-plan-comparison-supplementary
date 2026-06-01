@@ -1,0 +1,91 @@
+{
+  "tool": "opencode",
+  "tool_version": "1.15.13",
+  "model": "gpt-5-5",
+  "model_provider_string": "openai/gpt-5.5",
+  "mcp_servers": [
+    "github"
+  ],
+  "workspace_clean": false,
+  "leg_kind": "execution",
+  "started_at": "2026-06-01T02:42:32Z",
+  "ended_at": "2026-06-01T03:03:17Z",
+  "wall_seconds": 1245,
+  "token_estimate": 6519534,
+  "token_estimate_method": "opencode session export, summed across all token blocks: input + output + cache.read + cache.write",
+  "token_detail": {
+    "blocks": 75,
+    "input": 314415,
+    "output": 88767,
+    "cache_read": 6116352,
+    "cache_write": 0,
+    "total_billable": 6519534,
+    "cost_usd": 7.2933,
+    "cost_source": "rate-sheet (opencode_run.sh backfill; provider did not surface USD)"
+  },
+  "cost_estimate_usd": 7.2933,
+  "cost_estimate_method": "rate-sheet (opencode_run.sh backfill; provider did not surface USD): input×5.0 + output×30.0 + cache_read×0.5 per million tokens",
+  "prompt_sha256": null,
+  "prompt_path": "research/agent-plan-comparison-final/runs/gpt-5-5/personal-blog-scaffold/opencode/planning/",
+  "benchmark": "personal-blog-scaffold",
+  "exit_reason": "completed",
+  "truncated": false,
+  "operator": "dev",
+  "screenshots_present": [],
+  "session_id": "ses_17ef03f43ffezIilACQvzahxg7",
+  "baseline_sha": "486761c7afe573f4125bb8c28ea152954fa39753",
+  "target_repo": {
+    "remote": "cognitiverun/personal-site",
+    "starting_ref": "main",
+    "execution_branch": "bench/opencode-personal-blog-scaffold-gpt-5-5-20260601T024226Z",
+    "ending_sha": "43c5884d7e9d4752d152d583d922bf72bb461905",
+    "commit_protocol": "incremental commits to the dedicated branch via the GitHub MCP; branch never merged"
+  },
+  "mcp_calls_summary": {
+    "total": 11,
+    "by_tool": {
+      "github_push_files": 6,
+      "github_list_branches": 2,
+      "github_create_branch": 1,
+      "github_list_commits": 1,
+      "github_get_commit": 1
+    },
+    "by_server": {
+      "github": 11
+    },
+    "all_bench_pinned": true,
+    "bench_ref": "main",
+    "details_path": "transcripts/session-export.json"
+  },
+  "builtin_tool_calls": {
+    "total": 32,
+    "by_tool": {
+      "bash": 17,
+      "read": 7,
+      "apply_patch": 6,
+      "glob": 2
+    }
+  },
+  "mcp_required_failures": [],
+  "mcp_auth_failures": [
+    "Atlassian-MCP-Server"
+  ],
+  "mcp_auth_failures_note": "Benign noise from the operator's global opencode config; the Atlassian MCP is not required for this GitHub-only bench and its auth failure did not affect the execution leg (the GitHub MCP authenticated and served all 11 commit/read calls).",
+  "validators": {
+    "command": "npm install && npm run build (astro build)",
+    "exit_code": 0,
+    "all_green": true,
+    "post_hoc_only": true,
+    "pages_built": 9,
+    "result": "passed",
+    "test_output_artifact": "test-output.txt"
+  },
+  "diff_stats": {
+    "files_changed": 34,
+    "insertions": 1259,
+    "deletions": 2,
+    "source_diff_path": "source-diff/personal-site.patch"
+  },
+  "plan_deviations_observed": [],
+  "notes": "opencode execution leg under gpt-5-5 on the personal-blog-scaffold bench. Driven by `opencode run` (native headless mode) via tools/opencode/opencode_run.sh; no IDE/Cline involvement. 43 total tool calls (11 via the GitHub MCP, 32 via opencode builtins). Like the other personal-blog-scaffold execution legs (and unlike worker-video-feature / github-repository-bootstrap, which disable MCP), this leg uses the GitHub MCP as its commit channel: it created the dedicated branch and pushed 6 incremental commits via push_files, never merging to main. The diff (34 files, +1259/-2) is the richest of the gpt-5-5 blog drivers — it includes a committed package-lock.json and a real Vitest suite (tests/articles.test.ts, feeds.test.ts, rendered-html.test.ts, routes.test.ts). Build (astro build) passes post-hoc into test-output.txt; 9 pages built across en/es (a dedicated /[locale]/articles/ index route, vs the cursor build's 7). token_estimate is cache-inclusive per the opencode convention and is NOT directly comparable to Cursor's input/output-only footer counts; the 6.52M figure is dominated by 6.12M cache-read tokens. For gpt-5-5 the provider did not surface USD, so cost is rate-sheet backfilled."
+}
