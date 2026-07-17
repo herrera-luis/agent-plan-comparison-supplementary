@@ -1,0 +1,46 @@
+{
+  "tool": "openspec",
+  "tool_version": "openspec 0.21.0 (npx) + Cline 3.x (claude-opus-4-8 via Anthropic API)",
+  "model": "claude-opus-4-8",
+  "mcp_servers": [
+    "github"
+  ],
+  "workspace_clean": true,
+  "leg_kind": "planning",
+  "started_at": "2026-07-15T21:21:16Z",
+  "ended_at": "2026-07-15T21:26:44Z",
+  "wall_seconds": 328,
+  "wall_seconds_note": "Operator-stamped via `date -u` immediately before sending the desanitized prompt body to the Cline /opsx-propose driver and immediately after it returned the OpenSpec change. Excludes operator-side handling.",
+  "token_estimate": 57111,
+  "token_estimate_method": "Cline session token counter, transcribed from the chat footer at end of planning leg.",
+  "prompt_sha256": "b59225a1ee2d503dd0c1d08b4e669edc19196a74695008d7642206ba3763e13f",
+  "prompt_path": "research/agent-plan-comparison-final/prompts/personal-blog-scaffold.md",
+  "benchmark": "personal-blog-scaffold",
+  "operator": "dev",
+  "exit_reason": "completed",
+  "truncated": false,
+  "cost_estimate_usd": 1.0851,
+  "cost_estimate_method": "rate-sheet weighted 30/70: token_estimate × 19.0 USD/M-tokens (input/output split not exposed by Cline footer).",
+  "screenshots_present": [
+    "01-plan-footer.png",
+    "02-exec-footer.png"
+  ],
+  "openspec_change_name": "scaffold-personal-blog",
+  "artefacts_emitted": [
+    "proposal.md",
+    "design.md",
+    "tasks.md",
+    ".openspec.yaml",
+    "specs/content-model/spec.md",
+    "specs/content-pages/spec.md",
+    "specs/discovery-seo/spec.md",
+    "specs/i18n-routing/spec.md",
+    "specs/site-shell/spec.md"
+  ],
+  "mcp_calls_summary": {
+    "captured": false,
+    "note": "MCP traffic for the Cline-driven openspec leg is not separately enumerated in this study (Cline runs the MCP as an IDE extension and per-call logs were not exported). The planning leg produces the OpenSpec change locally; the GitHub MCP read access to the pinned greenfield repo is in scope but uncounted. n/c by convention — see HANDOFF-OPUS48-RERUN.md."
+  },
+  "validators": {},
+  "notes_pending": "Editorial cross-model narrative (i18n completeness coverage across the 5 spec domains — site-shell, i18n-routing, content-model, content-pages, discovery-seo — and comparison vs gpt-5-5 on the same bench) is deferred to the scoring + paper-update chat per Part E of HANDOFF-OPUS48-RERUN.md. This metadata.json captures only the structural fields synthesised from on-disk artefacts."
+}

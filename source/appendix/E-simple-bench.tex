@@ -23,7 +23,7 @@ Parameter~9 (Token cost: Cursor and OpenSpec each lift
 $3{\to}4$ under GPT-5.5, OpenCode lifts $2{\to}4$, Ralph is flat at
 $3/3$). Parameter~8 (Latency) is $5/5$ for OpenSpec: although its
 Opus~4.8 planning leg records a $2335$\,s raw wall span, that span is
-an attended-session measurement artefact (\S\ref{sec:threats}) scored
+an attended-session measurement artefact (Section~\ref{sec:threats}) scored
 anchor-5, matching its $181$\,s GPT-5.5 leg. Parameter~13 (Human-in-the-loop validation) does \emph{not}
 shift on this benchmark because OpenSpec and Ralph run
 Cline-as-extension under \emph{both} models (the driver is held
@@ -74,15 +74,15 @@ diagnostic weight here.
 
 The discriminating parameters on the single-file bench split into two
 groups. In the artefact-and-process group~(1--10), \texttt{openspec}
-saturates the structural anchors --- Parameters~1 (Artifact
+saturates the structural anchors: Parameters~1 (Artifact
 completeness: $2/5/2/2$), 4 (Test-plan coverage: $3/5/4/5$), and
-7 (Reproducibility: $3/5/4/4$) --- because the 4-artefact change
+7 (Reproducibility: $3/5/4/4$), because the 4-artefact change
 directory plus strict validator force structural content the
 chat-resident and single-file plans never produce. OpenCode picks
-up the plan-content anchors --- Param~3 (Task granularity: $3/4/4/5$),
+up the plan-content anchors: Param~3 (Task granularity: $3/4/4/5$),
 Param~4 (Test-plan coverage: tied with OpenSpec at $5$), and Param~5
 (Code-reference accuracy: $4/3/3/4$ under Opus~4.8, with OpenCode's $4$
-reflecting the count error) --- which partly offset the structural
+reflecting the count error), which partly offset the structural
 deficit on the weighted total. The
 tool-surface group~(11--16) splits the rubric across all four
 tools: \texttt{cursor} owns Parameters~12 (Learning curve) and~15

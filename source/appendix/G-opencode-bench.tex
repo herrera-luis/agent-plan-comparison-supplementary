@@ -161,7 +161,7 @@ below the video-support columns.}
 \subsection{Three cross-tool questions, answered}
 
 \paragraph{Q1.\ Does the Cline confound move the rubric ranking?}
-\textbf{No --- where the canonical and Cline pairings are directly
+\textbf{No: where the canonical and Cline pairings are directly
 comparable (the externally-grounded video-support bench) the native pairing
 \emph{out-scores} the Cline-driven tools; the cross-tool average
 leader changes only because of benchmark composition, not the driver.}
@@ -175,7 +175,7 @@ single-file bench under Opus~4.8 OpenCode ($3.540$) sits \emph{below}
 third under both models ($3.505$/$3.575$) because the empty repository
 strips the external grounding it depends on. The cross-model
 three-benchmark average therefore favours OpenSpec ($3.798$) over
-Ralph ($3.728$) and OpenCode ($3.701$) --- but this is a
+Ralph ($3.728$) and OpenCode ($3.701$), but this is a
 benchmark-composition effect: on the one bench where integration
 demand makes the canonical vs Cline pairing directly comparable,
 OpenCode's native pairing is on top, so the Cline-pairing confound is
@@ -184,11 +184,11 @@ Cline-pairing caveats (Cline's prompt-assembly overhead inflates
 Param~9 cost estimates; Cline's chat surface partly drives the OPX
 scores; Cline's MCP auto-injection partly drives the Param~6 MCP-call
 counts) remain literally true, but the cross-tool average leader is
-determined by the benchmark composition --- in particular the
-breadth-oriented blog bench --- not by the driver.
+determined by the benchmark composition (in particular the
+breadth-oriented blog bench), not by the driver.
 
 \paragraph{Q2.\ Does the canonical pairing change Parameter~9 (Token
-/ API cost)?} \textbf{Yes --- and the change is consistent with the
+/ API cost)?} \textbf{Yes, and the change is consistent with the
 ``rate-card overestimates real spend on heavy-cache workloads''
 hypothesis.} The OpenCode session export under Opus reports billed
 tokens deterministically, and the GPT-5.5 cells are reconstructed by
@@ -203,25 +203,28 @@ $\sim$\$763 (its 40.1\,M tokens at \$19/M). The delta is the framing
 overhead \emph{plus} the prompt-caching discount that the rate-card
 path does not model. A second reading specific to the Opus~4.8 column:
 although the cache-aware figures are far below rate-card, their
-\emph{absolute} level is the highest in the study --- the blog
+\emph{absolute} level is the highest in the study: the blog
 cell at \$49.57 (vs \$8.38 for the same cell under GPT-5.5) is the
 single most expensive cell in the corpus, because the Opus~4.8
 OpenCode greenfield run is a 40.1\,M-token deep-context session.
-OpenCode is thus the cost outlier under Opus~4.8 on every bench and
-the cheapest tool on the video-support bench under GPT-5.5 --- the cost
-ordering across tools cannot be read without specifying the model.
+OpenCode is thus the most token-intensive tool under Opus~4.8 across
+these benches, though the extreme blog-bench figure (\$49.57) rests on
+a single unrepeated run and should be treated as a candidate anomaly
+pending replication, and the cheapest tool on the video-support bench
+under GPT-5.5; the cost ordering across tools cannot be read without
+specifying the model.
 
 \paragraph{Q3.\ Does OpenCode reproduce the regex-passthrough
-trap on the video-support bench?} \textbf{Only under GPT-5.5 --- under
+trap on the video-support bench?} \textbf{Only under GPT-5.5; under
 Opus~4.8 OpenCode \emph{avoids} it.} The trap (failure to extend
 \texttt{STANDARD\_PATH\_REGEX} from \texttt{[a-z]+} to
 \texttt{[a-z0-9]+} so that \texttt{mp4|webm|mov} would route
 correctly) is the one cell in the matrix where frontier-model
 substitution changes the outcome. Under \textbf{Opus~4.8} the
-OpenCode planning leg diagnoses the defect directly --- the plan body
+OpenCode planning leg diagnoses the defect directly: the plan body
 states that ``\texttt{mp4} contains a digit and fails the regex
 \ldots\ the group must become \texttt{([a-z0-9]+)}''
-(\texttt{OPENCODE\_PLAN.md}~\S 2.3) and Task~2 broadens the character
+(\texttt{OPENCODE\_PLAN.md}~Section~2.3) and Task~2 broadens the character
 class before any code is written, so the trap never fires. Under
 \textbf{GPT-5.5} the same tool asserts the regex was already permissive
 (plan body: \texttt{[a-z]+} ``already allows mp4/webm/mov''), falls in,
@@ -231,7 +234,7 @@ regressions. The defect-convergence story in
 Section~\ref{subsec:defect-convergence} therefore reads: \emph{the
 spec format avoids the trap under both models without inspecting the
 digit (OpenSpec), while plan-content quality can avoid it only when it
-is high enough --- and is model-dependent}. OpenCode's Opus~4.8 plan
+is high enough, and is model-dependent}. OpenCode's Opus~4.8 plan
 is the single most precise code-reference diagnosis in the study and
 avoids the trap, but the same tool falls in under GPT-5.5; only the
 4-artefact spec scaffold front-loads ``parser broadening'' as a

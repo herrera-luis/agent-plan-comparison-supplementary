@@ -1,0 +1,34 @@
+{
+  "tool": "ralph",
+  "tool_version": "ralph-loop (auto-iteration) + Cline 3.x (claude-opus-4-8 via Anthropic API)",
+  "model": "claude-opus-4-8",
+  "mcp_servers": [
+    "github",
+    "Atlassian-MCP-Server"
+  ],
+  "workspace_clean": true,
+  "leg_kind": "planning",
+  "started_at": "2026-07-15T19:54:34Z",
+  "ended_at": "2026-07-15T19:58:01Z",
+  "wall_seconds": 207,
+  "wall_seconds_note": "Operator-stamped via `date -u` immediately before sending the desanitized prompt body to the driver and immediately after the driver reported the planning leg complete (Cursor plan card rendered for tool=cursor; Cline /opsx-propose returned for tool=openspec; Cline planning prompt returned RALPH_TASK.md + PLAN.md for tool=ralph). Excludes operator-side handling.",
+  "token_estimate": 36789,
+  "token_estimate_method": "Cline session token counter, transcribed from the chat footer at end of planning leg.",
+  "prompt_sha256": "80f14e082aee3b51d2088235ca2d999358faa8d53367782efd1e87fa74e743b3",
+  "prompt_path": "research/agent-plan-comparison-final/prompts/github-repository-bootstrap.md",
+  "benchmark": "github-repository-bootstrap",
+  "operator": "dev",
+  "exit_reason": "completed",
+  "truncated": false,
+  "cost_estimate_usd": 0.6990,
+  "cost_estimate_method": "rate-sheet weighted 30/70: token_estimate × 19.0 USD/M-tokens (input/output split not exposed by Cline/Cursor footer).",
+  "screenshots_present": [
+    "01-plan-footer.png",
+    "02-exec-footer.png"
+  ],
+  "artefacts_emitted": [
+    "RALPH_TASK.md",
+    "PLAN.md"
+  ],
+  "notes_pending": "Editorial cross-model narrative (driver substitution, MCP-call breakdown, planning-leg defect surface, comparison vs rev-3 / v1 Opus) is deferred to the scoring + paper-update chat per Part E of HANDOFF-OPUS48-RERUN.md. This metadata.json captures only the structural fields that can be synthesised from on-disk artefacts."
+}

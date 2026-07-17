@@ -24,12 +24,12 @@ to the paper, not the paper itself.
 
 | Path | What it holds |
 |------|---------------|
-| `supplementary-materials.pdf` | The compiled Supplementary Materials document (Appendices A–G, Tables S1–S7). |
+| `supplementary-materials.pdf` | The compiled Supplementary Materials document (Appendices A–H, Tables S1–S13). Appendix H reports the repeat-run variance for the close-margin OpenSpec/Ralph Opus 4.8 cells. |
 | `source/` | LaTeX source for the supplementary document: `supplementary.tex`, `appendix/*.tex`, native TikZ `figures/*.tex`, and the `references.bib` database. |
 | `rubric/` | The full engineering-rigor rubric and anchors (`rubric.md`) plus the grill-me decision-gate logs that fixed the scoring scheme before any cell was scored. |
 | `prompts/` | The three frozen benchmark prompt bodies issued verbatim to every surface/model. |
-| `scoring/` | Per-cell scoring CSVs for both models (`scores-opus48.csv`, `scores-gpt55.csv`) and the aggregate roll-up (`score-aggregates.md`). |
-| `metadata/` | Per-leg `metadata.json` for all 48 cells (planning + execution), preserving the original `runs/<model>/<benchmark>/<surface>/<phase>/` layout. |
+| `scoring/` | Per-cell scoring CSVs for both models (`scores-opus48.csv`, `scores-gpt55.csv`) and the aggregate roll-up (`score-aggregates.md`). Repeat-run variance for the close-margin cells: full per-parameter repeat vectors (`scores-opus48-repeats.csv`), compact per-cell totals (`variance-repeats.csv`), and the analysis narrative (`variance-analysis.md`). |
+| `metadata/` | Per-leg `metadata.json` for all 48 cells (planning + execution), preserving the `runs/<model>/<benchmark>/<surface>/<phase>/` layout. For the six close-margin OpenSpec/Ralph Opus 4.8 cells, the two additional repeats are published as full captures (plan artifacts, timing, token counts, and screenshots) under `.../repeat-{1,2}/`; the original single run is the metadata-only `planning/` and `execution/` legs (repeat-0). |
 
 ## How to read the artifacts
 
@@ -43,6 +43,11 @@ to the paper, not the paper itself.
   pin a pre-feature reference state by Git ref; the greenfield blog benchmark
   pins an empty seed repository and commits only to never-merged dedicated
   branches.
+- **Repeat runs** (`.../repeat-{1,2}/`) re-execute the six close-margin
+  OpenSpec/Ralph Opus 4.8 cells twice more under the frozen protocol, to bound
+  the run-to-run variance of the sub-0.1-point margin between the two tools. See
+  `scoring/variance-analysis.md` and Appendix H of the PDF; the original run is
+  frozen as repeat-0.
 
 ## Rebuilding the supplementary PDF
 

@@ -24,7 +24,7 @@
 \node[surface,   below=2mm    of hdr-cur] (cur1) {Operator + Cursor};
 \node[surface,   below=\rowsep of cur1]   (cur2) {Plan Mode session};
 \node[artefact,  below=\rowsep of cur2]   (cur3) {{\textasciitilde}/.cursor/plans/\\<hash>.plan.md};
-\node[validator, below=\rowsep of cur3]   (cur4) {(none --- human review)};
+\node[validator, below=\rowsep of cur3]   (cur4) {(none: human review)};
 
 \node[surface,   below=2mm    of hdr-osp] (osp1) {Headless agent runtime};
 \node[surface,   below=\rowsep of osp1]   (osp2) {/opsx-propose};
@@ -39,7 +39,7 @@
 \node[surface,   below=2mm    of hdr-ocd] (ocd1) {opencode native runtime};
 \node[surface,   below=\rowsep of ocd1]   (ocd2) {opencode run\\-{}-format json};
 \node[artefact,  below=\rowsep of ocd2]   (ocd3) {OPENCODE\_PLAN.md\\session-export.json};
-\node[validator, below=\rowsep of ocd3]   (ocd4) {(none --- session\\export is the audit)};
+\node[validator, below=\rowsep of ocd3]   (ocd4) {(none: session\\export is the audit)};
 
 \foreach \x in {cur,osp,ral,ocd} {
   \draw[arrow] (\x 1) -- (\x 2);

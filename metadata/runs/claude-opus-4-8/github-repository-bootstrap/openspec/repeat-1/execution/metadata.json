@@ -1,0 +1,64 @@
+{
+  "tool": "openspec",
+  "tool_version": "openspec 0.21.0 (npx) + Cline 3.x (claude-opus-4-8 via Anthropic API)",
+  "model": "claude-opus-4-8",
+  "mcp_servers": [],
+  "mcp_servers_note": "Execution legs run with MCP disabled by design (the prompt + plan carry all the information the agent needs; we want diffs to reflect agent reasoning, not MCP fetches).",
+  "workspace_clean": false,
+  "leg_kind": "execution",
+  "started_at": "2026-07-15T16:06:04Z",
+  "ended_at": "2026-07-15T16:09:47Z",
+  "wall_seconds": 223,
+  "wall_seconds_note": "Operator-stamped via `date -u` immediately before kicking off the execution leg and immediately after the driver reported all tasks done.",
+  "token_estimate": 66037,
+  "token_estimate_method": "Cline session token counter, transcribed from the chat footer at end of execution leg.",
+  "prompt_sha256": null,
+  "prompt_path": "research/agent-plan-comparison-final/runs/claude-opus-4-8/github-repository-bootstrap/openspec/planning/",
+  "benchmark": "github-repository-bootstrap",
+  "operator": "dev",
+  "exit_reason": "completed",
+  "truncated": false,
+  "input_plan": {
+    "source_dir": "research/agent-plan-comparison-final/runs/claude-opus-4-8/github-repository-bootstrap/openspec/planning/",
+    "task_count_input": 21,
+    "task_count_executed": 21,
+    "tasks_skipped": []
+  },
+  "target_repo": {
+    "remote": "cognitiverun/infra-terraform",
+    "starting_ref": "fbc5cbfd1372714367c45b3e33ca49b7cf32cffd",
+    "starting_sha": "fbc5cbfd1372714367c45b3e33ca49b7cf32cffd",
+    "execution_branch": "bench/openspec-github-repository-bootstrap-20260530T173706Z",
+    "ending_sha": "fbc5cbfd1372714367c45b3e33ca49b7cf32cffd",
+    "uncommitted_when_captured": true,
+    "commit_policy_note": "Per workspace AGENTS.md: agents do not commit unless explicitly asked. Source diff captured under source-diff/."
+  },
+  "validators": {
+    "command": "terraform fmt -check -recursive",
+    "agent_introduced_drift": false,
+    "non_zero_exit_cause": "Pre-existing formatting drift in unrelated files (the canonical 13-file drift set seen in v1 Opus and rev-3 captures). The new github/repositories/sre/agent_research_eval.tf produced by the agent is itself terraform-fmt clean; the validator's non-zero exit reflects pre-existing repository hygiene, not agent output.",
+    "all_pass_in_runnable_environment": true,
+    "result": "non_zero_preexisting_drift_only"
+  },
+  "diff_stats": {
+    "files_changed": 7,
+    "insertions": 534,
+    "deletions": 0,
+    "by_file_changed_lines": {
+      "github/repositories/sre/agent-research-eval.tf": 254,
+      ".../add-agent-research-eval-repo/.openspec.yaml": 2,
+      ".../changes/add-agent-research-eval-repo/README.md": 3,
+      ".../changes/add-agent-research-eval-repo/design.md": 96,
+      ".../add-agent-research-eval-repo/proposal.md": 41,
+      ".../specs/sre-agent-research-eval-repo/spec.md": 105,
+      ".../changes/add-agent-research-eval-repo/tasks.md": 33
+    },
+    "by_file_note": "Per-file values are total changed lines (insertions + deletions) as reported by `git diff --stat`. The aggregate +/- split is captured at insertions/deletions; per-file split would require parsing source-diff/*.patch.",
+    "source_diff_path": "source-diff/infra-terraform.patch"
+  },
+  "plan_deviations_observed_count": 0,
+  "plan_deviations_observed_path": "execution/deviations.json",
+  "cost_estimate_usd": 1.2547,
+  "cost_estimate_method": "rate-sheet weighted 30/70: token_estimate × 19.0 USD/M-tokens (input/output split not exposed by Cline/Cursor footer).",
+  "notes_pending": "Editorial cross-model narrative (defect convergence, regex-trap outcome, team_access count cross-leg accuracy, RALPH_TASK.md workspace-rule firing asymmetry, etc.) is deferred to the scoring + paper-update chat per Part E. This metadata.json captures only the structural fields synthesised from on-disk artefacts."
+}

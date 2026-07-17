@@ -1,0 +1,105 @@
+\section{Repeat-run variance for the close-margin cells}
+\label{app:variance}
+
+The main-article ranking turns, under Opus~4.8, on a $0.010$-point margin
+between \texttt{openspec} ($3.812$) and \texttt{ralph} ($3.802$) in the
+three-bench average (Section~\ref{sec:results}). To estimate the run-to-run
+variability of that margin we repeated the cells that determine it,
+\texttt{openspec} and \texttt{ralph} under Claude Opus~4.8 on all three
+benchmarks (planning and execution legs), \emph{two additional times each},
+for 12 additional attended captures under a frozen protocol (identical prompt
+bodies, model pins, and rubric). The original captures are retained unchanged as
+\emph{repeat-0}, so the aggregate table (Table~\ref{tab:aggregate}) is
+untouched; the repeats are scored on the same frozen sixteen-parameter rubric
+(Appendix~\ref{app:rubric}).
+
+\paragraph{Scoring method.}
+A parameter is allowed to move across repeats only when the repeat artefact
+genuinely differs from repeat-0, never through scorer-calibration drift. The
+mechanical parameters (Parameter~8 latency, Parameter~9 cost) are recomputed from
+each repeat's measured planning wall time (\texttt{started\_at}\,$\to$\,\texttt{ended\_at})
+and token total; the tool-surface parameters (11--16) are driver-determined and
+held constant, since the Cline-as-extension driver is unchanged; and the
+plan-content parameters (1--7, 10) are re-read from each repeat's planning
+artefacts against the frozen anchors. Re-summing the frozen repeat-0 vectors
+reproduces every published aggregate total exactly. Only two genuine
+plan-content moves were found: the \texttt{openspec} blog repeat-1 dropped
+Parameter~5 to anchor-4$\to$3 on a one-off cross-artefact naming drift (a
+\texttt{blog} content collection in one spec while the rest of the plan used
+\texttt{/articles/}), and the \texttt{ralph} video repeat-1 dropped Parameter~6
+to anchor-5$\to$4 because a ticket-linked reference file returned HTTP~404 during
+that run; both were coherent again in repeat-2. All other movement is mechanical
+latency/cost.
+
+\paragraph{Latency artefact check.}
+The repeats also bear on the two attended-session latency artefacts noted in
+Section~\ref{sec:results}. The frozen repeat-0 \texttt{openspec} planning legs on
+the video-support and single-file benches recorded raw spans of 23,663~s
+($\approx$~394~min, left open overnight) and 2,335~s ($\approx$~38.9~min, start
+stamp predating the Send), which we scored at anchor-5 as measurement artefacts.
+The four clean re-runs confirm that treatment: the same planning legs completed in
+6.0 and 9.8~min (video-support) and 9.2 and 3.5~min (single-file), all inside the
+anchor-5 ($<$10~min) band, so the original spans reflect attended-session idle
+time rather than active planning.
+
+\begin{table}[h]
+\centering
+\caption{Per-cell weighted engineering-rigor total (max 5.0) across the three
+replicates under Claude Opus~4.8, for the six close-margin cells. \emph{r0} is
+the frozen published cell (Table~\ref{tab:aggregate}); \emph{r1} and \emph{r2}
+are the two additional repeats. The largest per-cell spread is $0.105$
+(\texttt{ralph}/video, driven by a planning-latency swing of 7.5$\to$12.6$\to$16.9~min
+moving Parameter~8 across anchor 5$\to$4$\to$3); \texttt{openspec}/video is
+identical across all three replicates.}
+\label{tab:variance-repeats}
+\begin{tabular}{ll rrr rr}
+\toprule
+Tool & Benchmark & r0 & r1 & r2 & mean & range \\
+\midrule
+\texttt{openspec} & single-file   & 3.765 & 3.800 & 3.800 & 3.788 & 0.035 \\
+\texttt{openspec} & video-support & 3.870 & 3.870 & 3.870 & 3.870 & 0.000 \\
+\texttt{openspec} & blog          & 3.800 & 3.765 & 3.835 & 3.800 & 0.070 \\
+\midrule
+\texttt{ralph}    & single-file   & 3.475 & 3.510 & 3.510 & 3.498 & 0.035 \\
+\texttt{ralph}    & video-support & 3.895 & 3.790 & 3.825 & 3.837 & 0.105 \\
+\texttt{ralph}    & blog          & 4.035 & 4.035 & 4.070 & 4.047 & 0.035 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[h]
+\centering
+\caption{Three-bench average (avg-3) per tool per replicate index under
+Opus~4.8, and the OpenSpec$-$Ralph margin. \texttt{openspec} leads \texttt{ralph}
+in all three replicates, but the margin ($0.010$--$0.033$) is of the same
+magnitude as the per-cell run-to-run range in
+Table~\ref{tab:variance-repeats} (up to $0.105$), so under Opus~4.8 the two
+tools are within run-to-run variation and no ordering is claimed between them.}
+\label{tab:variance-avg3}
+\begin{tabular}{l rrr r}
+\toprule
+Replicate & \texttt{openspec} avg-3 & \texttt{ralph} avg-3 & margin (os$-$ralph) & leader \\
+\midrule
+r0 (frozen) & 3.812 & 3.802 & $+0.010$ & \texttt{openspec} \\
+r1          & 3.812 & 3.778 & $+0.033$ & \texttt{openspec} \\
+r2          & 3.835 & 3.802 & $+0.033$ & \texttt{openspec} \\
+\midrule
+pooled (min--max) & 3.812--3.835 & 3.778--3.802 & --- & --- \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Each tool's avg-3 varies by $0.023$ across the three replicates. The
+cross-model three-bench average (OpenSpec ahead of Ralph), which does not rest on
+the Opus-only margin, is unaffected. All \emph{other} cells in the 48-cell matrix
+remain single-run point estimates (Section~\ref{sec:threats}). The full
+per-parameter repeat vectors, with per-row provenance notes
+(mechanical~/~tool-surface~/~plan-content~/~content-move), are released as
+\texttt{scoring/scores-opus48-repeats.csv}; the compact totals and the analysis
+narrative are in \texttt{scoring/variance-repeats.csv} and
+\texttt{scoring/variance-analysis.md}. The 12 full repeat captures (planning and
+execution artefacts, timing, and token counts) are released under
+\texttt{metadata/runs/claude-opus-4-8/$\langle$benchmark$\rangle$/$\langle$tool$\rangle$/repeat-\{1,2\}/}
+in the public artefact repository alongside these scoring files.
+
+\FloatBarrier

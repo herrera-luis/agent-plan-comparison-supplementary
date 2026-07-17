@@ -54,8 +54,9 @@ cell bills $\$49.57$ against GPT-5.5's $\$8.38$ ($0.169\times$),
 entirely because the Opus~4.8 OpenCode greenfield run is a $40.1$M-token
 deep-context session; the video-support bench OpenCode cell is similar
 ($\$22.07$ vs $\$3.85$, $0.175\times$). OpenCode is therefore the
-cost outlier under Opus~4.8 on every bench, not the bargain it is
-under GPT-5.5.
+most token-intensive tool under Opus~4.8 across these benches, not the
+bargain it is under GPT-5.5, though the extreme blog-bench figure
+($\$49.57$) is a single unrepeated observation pending replication.
 
 \subsection{Per-parameter $\Delta$ matrix}
 
@@ -70,7 +71,7 @@ value means GPT-5.5 out-scored Opus~4.8 on that parameter. ``--'' marks
 an integer-equivalent cell (the two models land on the same anchor);
 small non-zero $\Delta$~Totals on otherwise-dashed rows reflect
 sub-anchor weighting rounding. The non-zero entries fall on five
-parameters --- 2 (Requirement traceability, the Ralph blog capability
+parameters: 2 (Requirement traceability, the Ralph blog capability
 matrix), 4 (Test-plan coverage, on the blog bench), 5 (Code-reference
 accuracy), 8 (Latency), and 9 (Token cost). Crucially, Param~13
 (Human-in-the-loop validation) carries \emph{no} cross-model delta on
@@ -110,9 +111,9 @@ non-zero entry. Param~8 (Latency) moves only on the \texttt{openspec}
 blog cell: $+2$ (Opus~4.8's $1166$\,s anchor-3 vs GPT-5.5's $212$\,s
 anchor-5). The Opus~4.8 \texttt{openspec} single-file and video-support
 cells record longer raw wall spans ($2335$\,s and $23663$\,s), but
-those are attended-session measurement artefacts (\S\ref{sec:threats})
+those are attended-session measurement artefacts (Section~\ref{sec:threats})
 scored anchor-5 under both models, so they carry no latency delta. No
-other tool moves on latency --- \texttt{cursor},
+other tool moves on latency: \texttt{cursor},
 \texttt{ralph}, and OpenCode all stay inside the anchor-5 band
 ($<10$\,min) under both models on all three benchmarks. Param~9
 (Token cost) lifts toward GPT-5.5 on the token-heavy cells:
@@ -129,14 +130,14 @@ edges GPT-5.5's). The blog bench adds the only Param~2 and
 Param~4 movers in the study: Ralph's blog cell loses $2$ on Param~2
 (Requirement traceability) and $1$ on Param~4 (Test-plan coverage)
 under GPT-5.5 because the C1--C26 capability matrix and its per-task
-test linkage --- present under Opus~4.8 --- collapse to a free-text
+test linkage (present under Opus~4.8) collapse to a free-text
 bullet list under GPT-5.5; OpenSpec and OpenCode each move $\pm1$ on
 Param~4 on the blog bench. These blog-bench Param~2/4 swings are what
 make Ralph's blog $\Delta$ the largest in the study ($-0.350$).
 Critically, Param~13 (Human-in-the-loop validation) carries \emph{no}
-delta on any cell --- including the blog cells, where OpenSpec and
+delta on any cell, including the blog cells, where OpenSpec and
 Ralph are scored $4/4$ under both models on the same Cline-refinement
-basis as their single-file/video-support cells --- because OpenSpec and Ralph run
+basis as their single-file/video-support cells, because OpenSpec and Ralph run
 Cline-as-extension under \emph{both} models and the HiL surface is
 identical across the model axis. The remaining parameters (1, 3, 6, 7,
 10, and the tool-surface parameters 11, 12, 14, 15, 16) are
@@ -156,9 +157,10 @@ OpenSpec-specific Opus~4.8 outlier), Cost (token-volume driven), a
 $\pm1$ Code-reference swing, and the blog-bench Param~2/4 swing that
 drives the one rank flip. Teams targeting the cheapest end-to-end
 run should prefer OpenCode on GPT-5.5 on the video-support bench
-(\$3.85 cache-aware, the lowest in the matrix) and avoid OpenCode under
-Opus~4.8 on token-heavy work (\$49.57 on the blog bench, the
-highest in the study); Cursor is the cheapest rate-card tool under
+(\$3.85 cache-aware, the lowest in the matrix) and be cautious with
+OpenCode under Opus~4.8 on token-heavy work (\$49.57 on the blog bench,
+the highest in the study, though a single-run figure pending
+replication); Cursor is the cheapest rate-card tool under
 both models on the single-file bench
 (\$2.71 Opus~4.8, \$2.33 GPT-5.5, on top of the Cursor Pro floor).
 
@@ -223,7 +225,7 @@ doesn't) chiefly by tool, not by model
 Cursor and Ralph under both models and never on OpenSpec. The
 exception is OpenCode, which avoids the trap under Opus~4.8 (its plan
 diagnoses the digit and broadens the regex up front) but falls into it
-under GPT-5.5 --- the only cell where frontier-model substitution
+under GPT-5.5, the only cell where frontier-model substitution
 changes the trap outcome. OpenSpec's spec format avoids it under both
 models without inspecting the digit.
 \item \textbf{Opus~4.8 is cheaper per token yet pricier end-to-end on
@@ -244,7 +246,7 @@ OpenSpec wall-time gap is a measurement artefact.} The Opus~4.8 OpenSpec
 planning legs record much longer raw wall spans ($23663$\,s
 video-support, $2335$\,s single-file) than the same cells under GPT-5.5
 ($269$\,/\,$181$\,s), but those Opus spans are attended-session idle
-artefacts (\S\ref{sec:threats}) scored anchor-5 rather than genuine
+artefacts (Section~\ref{sec:threats}) scored anchor-5 rather than genuine
 latency. The substantive model difference is scope behaviour: on the
 single-file bench the GPT-5.5 OpenSpec / Ralph / OpenCode loops
 autonomously remediate ambient \texttt{terraform fmt} drift where the
