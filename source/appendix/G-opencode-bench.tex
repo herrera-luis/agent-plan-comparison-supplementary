@@ -80,11 +80,10 @@ Token totals and per-tool-call cost figures come from
 \texttt{session-export.json} rather than from a heuristic byte-volume
 estimate, removing the Parameter~9 caveat that applies to the
 Cline-driven cells. The full operator runbook (provider auth, MCP
-auth, model-string verification, drop / redact / guard recipe) is at
-\texttt{HANDOFF-OPENCODE-RUN.md} in the study root. The MCP picker
-configurations are at \texttt{tools/opencode/opencode.simple.json}
-and \texttt{opencode.complex.json}; the headless wrapper is at
-\texttt{tools/opencode/opencode\_run.sh}.
+auth, model-string verification, and the drop / redact / guard recipe),
+the per-benchmark MCP picker configurations (simple vs complex tool
+surface), and the headless wrapper are retained in the study's private
+operational record.
 
 \subsection{Per-cell weighted totals and per-parameter scores}
 

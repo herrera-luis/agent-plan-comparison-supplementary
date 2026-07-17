@@ -28,10 +28,9 @@ operator's local zsh environment, not of any one chat session.
 \texttt{opsx-propose}~/~\texttt{opsx-apply} executions}
 
 On the captured run, the propose phase was first opened in the
-\texttt{agent-research} workspace (the workspace where the
-planning chat had been authored), so the agent initially scaffolded
-the OpenSpec change directory under that workspace's
-\texttt{openspec/changes/} tree, not under the target
+workspace where the planning chat had been authored, so the agent
+initially scaffolded the OpenSpec change directory under that
+workspace's \texttt{openspec/changes/} tree, not under the target
 \texttt{core-services} checkout where the worker code lives. The
 operator detected the mis-route from \texttt{git status}, re-ran
 \texttt{openspec init <core-services-path> --tools cursor --force},

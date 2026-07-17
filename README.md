@@ -29,7 +29,7 @@ to the paper, not the paper itself.
 | `rubric/` | The full engineering-rigor rubric and anchors (`rubric.md`) plus the grill-me decision-gate logs that fixed the scoring scheme before any cell was scored. |
 | `prompts/` | The three frozen benchmark prompt bodies issued verbatim to every surface/model. |
 | `scoring/` | Per-cell scoring CSVs for both models (`scores-opus48.csv`, `scores-gpt55.csv`) and the aggregate roll-up (`score-aggregates.md`). Repeat-run variance for the close-margin cells: full per-parameter repeat vectors (`scores-opus48-repeats.csv`), compact per-cell totals (`variance-repeats.csv`), and the analysis narrative (`variance-analysis.md`). |
-| `metadata/` | Per-leg `metadata.json` for all 48 cells (planning + execution), preserving the `runs/<model>/<benchmark>/<surface>/<phase>/` layout. For the six close-margin OpenSpec/Ralph Opus 4.8 cells, the two additional repeats are published as full captures (plan artifacts, timing, token counts, and screenshots) under `.../repeat-{1,2}/`; the original single run is the metadata-only `planning/` and `execution/` legs (repeat-0). |
+| `metadata/` | Per-leg `metadata.json` for all 48 cells (planning + execution), preserving the `runs/<model>/<benchmark>/<surface>/<phase>/` layout. For the six close-margin OpenSpec/Ralph Opus 4.8 cells, the two additional repeats are published the same way, as per-leg `metadata.json` (timing, token counts, cost, and notes) under `.../repeat-{1,2}/`; the original single run is `repeat-0`. |
 
 ## How to read the artifacts
 
