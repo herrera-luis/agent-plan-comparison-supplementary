@@ -94,14 +94,14 @@ the six OpenCode cells.
 \begin{table}[h]
 \centering
 \caption{Per-cell weighted totals (max 5.0) for the six
-OpenCode cells. Across all three benchmarks OpenCode ranks third on
-the cross-model average ($3.701$, vs OpenSpec's $3.798$ and Ralph's
-$3.728$ in Table~\ref{tab:aggregate}): the blog bench has no Jira
-ticket and no rich external MCP for OpenCode to use (Param~2 and
-Param~6 sit at the no-external-source baseline), so its blog cell is
-third under both models ($3.540$ cross-model). OpenCode wins the
-video-support bench outright ($3.955$ cross-model vs Ralph's $3.855$
-and OpenSpec's $3.830$).}
+OpenCode cells. Across all three benchmarks OpenCode's cross-model
+average ($3.701$) sits within the ${\sim}0.1$-point cluster with
+OpenSpec ($3.798$) and Ralph ($3.728$) (Table~\ref{tab:aggregate}): the
+blog bench has no Jira ticket and no rich external MCP for OpenCode to
+use (Param~2 and Param~6 sit at the no-external-source baseline), so its
+blog cell is lowest of the three there under both models ($3.540$
+cross-model). OpenCode wins the video-support bench outright ($3.955$
+cross-model vs Ralph's $3.855$ and OpenSpec's $3.830$).}
 \label{tab:opencode-totals}
 \begin{tabular}{lrrr}
 \toprule
@@ -170,21 +170,23 @@ Table~\ref{tab:aggregate}: on the video-support bench OpenCode leads under
 both models (Opus~4.8 $3.925$ vs \texttt{openspec} $3.870$ vs
 \texttt{ralph} $3.895$; GPT-5.5 $3.985$ vs $3.790$ vs $3.815$). On the
 single-file bench under Opus~4.8 OpenCode ($3.540$) sits \emph{below}
-\texttt{openspec} ($3.695$); on the blog bench OpenCode is
+\texttt{openspec} ($3.765$); on the blog bench OpenCode is
 third under both models ($3.505$/$3.575$) because the empty repository
 strips the external grounding it depends on. The cross-model
-three-benchmark average therefore favours OpenSpec ($3.798$) over
-Ralph ($3.728$) and OpenCode ($3.701$), but this is a
-benchmark-composition effect: on the one bench where integration
-demand makes the canonical vs Cline pairing directly comparable,
-OpenCode's native pairing is on top, so the Cline-pairing confound is
-not \emph{inflating} OpenSpec's or Ralph's scores past OpenCode's. The
+three-benchmark average therefore places OpenSpec ($3.798$), Ralph
+($3.728$), and OpenCode ($3.701$) within a single ${\sim}0.1$-point
+cluster (Section~\ref{sec:results}) rather than in a definitive order,
+and what little separation there is reflects benchmark composition: on
+the one bench where integration demand makes the canonical vs Cline
+pairing directly comparable, OpenCode's native pairing is on top, so the
+Cline-pairing confound is not \emph{inflating} OpenSpec's or Ralph's
+scores past OpenCode's. The
 Cline-pairing caveats (Cline's prompt-assembly overhead inflates
 Param~9 cost estimates; Cline's chat surface partly drives the OPX
 scores; Cline's MCP auto-injection partly drives the Param~6 MCP-call
-counts) remain literally true, but the cross-tool average leader is
-determined by the benchmark composition (in particular the
-breadth-oriented blog bench), not by the driver.
+counts) remain literally true, but the small cross-tool differences in
+the three-benchmark average are determined by the benchmark composition
+(in particular the breadth-oriented blog bench), not by the driver.
 
 \paragraph{Q2.\ Does the canonical pairing change Parameter~9 (Token
 / API cost)?} \textbf{Yes, and the change is consistent with the

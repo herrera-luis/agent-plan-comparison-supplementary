@@ -1,9 +1,10 @@
 \section{Repeat-run variance for the close-margin cells}
 \label{app:variance}
 
-The main-article ranking turns, under Opus~4.8, on a $0.010$-point margin
-between \texttt{openspec} ($3.812$) and \texttt{ralph} ($3.802$) in the
-three-bench average (Section~\ref{sec:results}). To estimate the run-to-run
+Under Opus~4.8 the main-article three-bench average separates
+\texttt{openspec} ($3.812$) and \texttt{ralph} ($3.802$) by only a
+$0.010$-point margin (Section~\ref{sec:results}), too small to support an
+ordering. To estimate the run-to-run
 variability of that margin we repeated the cells that determine it,
 \texttt{openspec} and \texttt{ralph} under Claude Opus~4.8 on all three
 benchmarks (planning and execution legs), \emph{two additional times each},
@@ -89,9 +90,12 @@ pooled (min--max) & 3.812--3.835 & 3.778--3.802 & --- & --- \\
 \end{tabular}
 \end{table}
 
-Each tool's avg-3 varies by $0.023$ across the three replicates. The
-cross-model three-bench average (OpenSpec ahead of Ralph), which does not rest on
-the Opus-only margin, is unaffected. All \emph{other} cells in the 48-cell matrix
+Each tool's avg-3 varies by $0.023$ across the three replicates. Because this
+repeat campaign covers only the \texttt{openspec} and \texttt{ralph} Opus~4.8
+cells, the \texttt{opencode} cells and every GPT-5.5 cell carry no variance
+estimate; consistent with the uniform ${\sim}0.1$-point criterion
+(Section~\ref{sec:threats}), the three top tools are read as a numerically close
+cluster rather than an ordering. All \emph{other} cells in the 48-cell matrix
 remain single-run point estimates (Section~\ref{sec:threats}). The full
 per-parameter repeat vectors, with per-row provenance notes
 (mechanical~/~tool-surface~/~plan-content~/~content-move), are released as

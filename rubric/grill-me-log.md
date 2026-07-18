@@ -104,3 +104,90 @@ Mode "Implement plan" button (chat -> Agent Mode), openspec via
 `openspec instructions apply` / `/opsx-apply`, ralph via re-invocation of
 the wrapper loop on the same `RALPH_TASK.md`. Each hand-off mechanism is
 exercised by the corresponding execution leg under `runs/.../execution/`.
+
+---
+
+# Operator-experience (OPX) companion rubric — written defenses
+
+The four-parameter operator-experience rubric (O1 setup friction, O2 operator
+cognitive load, O3 time-to-first-viable-plan, O4 in-flight iterability; equal
+25% weights) is scored per tool, not per (tool × benchmark), because the four
+dimensions are properties of the tool surface rather than of the task. The
+per-tool scores are O1-O4 = cursor 5/4/5/5 (4.75), opencode 3/3/4/2 (3.00),
+openspec 2/2/3/3 (2.50), ralph 2/2/3/2 (2.25). Every extreme (1 or 5) score
+carries a defense below; the full opencode row is defended parameter-by-parameter
+in response to the round-2 referee request that the row be finalized rather than
+left as an anchor sketch.
+
+## O1 Setup friction
+
+- **cursor (5)**: Zero install — Plan Mode is already resident in the IDE the
+  operator uses for other work; no CLI, no config file is required before a plan
+  can appear. Anchor 5 ("Zero install: already in the IDE / shell the operator
+  uses for other work"). Source: cursor planning docs; tool-characteristics.md
+  (cursor row).
+- **openspec (2)** and **ralph (2)**: CLI install plus one-time convention
+  learning (OpenSpec: `npm` install + the proposal/design/spec/tasks scaffold;
+  Ralph: authoring `RALPH_TASK.md` and internalising the loop/budget/GUTTER
+  semantics). Anchor 2 ("CLI install plus a small number of one-time
+  configuration files; conventions documented but still must be learned").
+- **opencode (3)**: A single-binary install
+  (`curl -fsSL https://opencode.ai/install | bash` or
+  `brew install sst/tap/opencode`) followed by provider auth
+  (`opencode auth login`) and a per-bench `opencode.json` that wires the MCP
+  servers and provider (cell 8 additionally needs a one-time
+  `opencode mcp auth Atlassian-MCP-Server` OAuth handshake). This is heavier
+  than Cursor's zero-install surface but the per-bench `opencode.json` is a
+  single minimal, self-documenting config rather than a multi-file scaffold or a
+  set of coupled convention files, so it is read at anchor 3 ("CLI install only;
+  conventions are minimal or self-documenting"). The stricter reading (anchor 2,
+  counting `opencode.json` + provider/MCP auth as one-time configuration files)
+  was considered and rejected at the round-2 finalization: the config is a
+  single JSON with a documented schema and no cross-file coupling, and the score
+  is retained at 3. Source: `HANDOFF-OPENCODE-RUN.md` Part A (install, provider
+  auth, MCP config); `tools/opencode/opencode.{simple,complex}.json`.
+
+## O2 Operator cognitive load
+
+- **opencode (3)**: The operator authors a single prompt string and reads a
+  single free-form `OPENCODE_PLAN.md`; the only auxiliary surface held in mind
+  is the `session-export.json` schema used for audit/replay. "Single primary
+  file plus one auxiliary surface" = anchor 3. There are no coupled sub-formats
+  (contrast OpenSpec's proposal vs design vs spec deltas vs tasks). Source:
+  `tool-characteristics.md` (opencode row); `runs/*/*/opencode/planning/OPENCODE_PLAN.md`.
+- (No extreme score: openspec/ralph sit at anchor 2, cursor at anchor 4.)
+
+## O3 Time-to-first-viable-plan
+
+- **cursor (5)**: Plan content streams immediately in the chat thread and the
+  operator watches the model think on screen. Anchor 5. Source: cursor planning
+  docs; tool-characteristics.md (cursor row).
+- **opencode (4)**: `opencode run` streams plan content within seconds with
+  minimal scaffolding (no validator boot, no multi-file scaffold); the six
+  captured planning legs reached a complete plan in 98-293 s (Appendix G). It is
+  a headless JSON event stream rather than an on-screen chat, so it is not the
+  anchor-5 "model thinking on screen" experience. Anchor 4 ("Plan content
+  streams within seconds; minimal scaffolding"). Source: Appendix G plan wall
+  times; opencode CLI docs (`opencode run --format json`).
+
+## O4 In-flight iterability
+
+- **cursor (5)**: The operator refines the plan in the same chat without
+  restarting; the tool absorbs follow-up turns before the one-click hand-off to
+  Agent Mode. Anchor 5. Source: cursor planning docs.
+- **opencode (2)**: Revising a plan in the headless runtime means re-invoking
+  `opencode run` (which overwrites `OPENCODE_PLAN.md` and starts a fresh session
+  unless `--continue` is passed); there is no in-thread "revise" turn. Because a
+  plain re-invocation overwrites the session, the "prefer the lower anchor"
+  tie-break places it at anchor 2 ("Plan revisions require editing files by hand
+  and re-running the validator/loop") rather than anchor 3. Source:
+  `tool-characteristics.md` (opencode replay/hand-off); `HANDOFF-OPENCODE-RUN.md`
+  Part B.
+- **ralph (2)**: Refining the plan means editing `RALPH_TASK.md` and re-running
+  the loop rather than taking a follow-up turn in chat. Anchor 2.
+
+## Resolution status (OPX)
+
+Round-2 finalization pass: `Resolved Plan: accept_all` with O1=3 for opencode
+(operator-approved). The opencode row is no longer an anchor sketch; the totals
+above are the canonical operator-experience scores.

@@ -121,12 +121,12 @@ other tool moves on latency: \texttt{cursor},
 \texttt{ralph} $+1$ (blog), and OpenCode $+2$ on the single-file and
 video-support benches and $+1$ on the blog bench (the Opus~4.8 OpenCode cells
 are the cost outliers of the study). Param~5 (Code-reference accuracy) is
-mixed-sign and is the parameter most sensitive to plan precision:
-GPT-5.5 scores $+1$ on the OpenCode single-file bench (where the Opus~4.8
-plan carries the $47$-vs-$53$ \texttt{team\_access} count error) but
-$-1$ on Cursor single-file, OpenSpec video-support, Ralph video-support, and Cursor
-blog, Ralph blog, and OpenCode blog (where the Opus~4.8 plan body
-edges GPT-5.5's). The blog bench adds the only Param~2 and
+mixed-sign and is the parameter most sensitive to plan precision.
+GPT-5.5 scores $+1$ on the OpenCode single-file bench, where the Opus~4.8
+plan carries the $47$-vs-$53$ \texttt{team\_access} count error. It
+scores $-1$ on Cursor single-file, OpenSpec video-support, Ralph
+video-support, Cursor blog, Ralph blog, and OpenCode blog, where the
+Opus~4.8 plan body edges GPT-5.5's. The blog bench adds the only Param~2 and
 Param~4 movers in the study: Ralph's blog cell loses $2$ on Param~2
 (Requirement traceability) and $1$ on Param~4 (Test-plan coverage)
 under GPT-5.5 because the C1--C26 capability matrix and its per-task
@@ -150,19 +150,19 @@ on the blog bench where Ralph and OpenSpec swap the top two) and
 the cost-and-latency shift under model substitution. Teams who plan to
 rotate through frontier models over a project's lifetime should treat
 the per-tool ranking on the artefact-and-process and tool-surface
-dimensions as essentially model-invariant on existing-codebase tasks,
-but should expect breadth-oriented greenfield tasks to be more
-model-sensitive: the cross-model deltas are confined to Latency (an
-OpenSpec-specific Opus~4.8 outlier), Cost (token-volume driven), a
-$\pm1$ Code-reference swing, and the blog-bench Param~2/4 swing that
-drives the one rank flip. Teams targeting the cheapest end-to-end
+dimensions as essentially model-invariant on existing-codebase tasks.
+Breadth-oriented greenfield tasks are more model-sensitive: the
+cross-model deltas are confined to Latency (an OpenSpec-specific
+Opus~4.8 outlier), Cost (token-volume driven), a $\pm1$ Code-reference
+swing, and the blog-bench Param~2/4 swing that drives the one rank flip.
+Cost guidance is model-specific. Teams targeting the cheapest end-to-end
 run should prefer OpenCode on GPT-5.5 on the video-support bench
-(\$3.85 cache-aware, the lowest in the matrix) and be cautious with
+(\$3.85 cache-aware, the lowest in the matrix), and be cautious with
 OpenCode under Opus~4.8 on token-heavy work (\$49.57 on the blog bench,
 the highest in the study, though a single-run figure pending
-replication); Cursor is the cheapest rate-card tool under
-both models on the single-file bench
-(\$2.71 Opus~4.8, \$2.33 GPT-5.5, on top of the Cursor Pro floor).
+replication). Cursor is the cheapest rate-card tool under both models on
+the single-file bench (\$2.71 Opus~4.8, \$2.33 GPT-5.5, on top of the
+Cursor Pro floor).
 
 \subsection{Operator-experience stability}
 
@@ -207,7 +207,9 @@ blog cell (its Opus-only capability matrix).
 \item \textbf{The video-support bench cross-model average favours
 OpenCode.} Complex-bench cross-model totals are OpenCode $3.955$,
 \texttt{ralph} $3.855$, \texttt{openspec} $3.830$, \texttt{cursor}
-$3.430$. OpenCode's lead comes from anchor-5 on Params~3, 4, 5 (Task
+$3.430$; the three canonically-strong tools sit within a
+${\sim}0.1$-point band of one another, so only the gap to Cursor is
+clearly outside run-to-run variation. OpenCode's lead comes from anchor-5 on Params~3, 4, 5 (Task
 granularity, Test-plan coverage, Code-reference accuracy) under both
 models plus Param~6 (MCP integration) at anchor-5 (17 verified
 Atlassian + GitHub calls under Opus~4.8, 16 under GPT-5.5). Cursor's
@@ -217,7 +219,8 @@ the canonical-pairing tools and the operator-attended chat surface
 exhaust the same external grounding when given the same ticket. Among
 the Cline-driven tools the tool-surface parameters (notably Param~14,
 Autonomous capacity, where only \texttt{ralph} anchors at $5$) are
-what keep Ralph ahead of OpenSpec on the video-support bench.
+what place Ralph fractionally above OpenSpec on the video-support bench
+(a $0.025$ cross-model difference, well within the ${\sim}0.1$ band).
 \item \textbf{Defect avoidance is mostly spec-format-bound, with one
 model-dependent exception.} The regex passthrough trap fires (or
 doesn't) chiefly by tool, not by model
